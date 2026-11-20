@@ -1149,6 +1149,15 @@
     <div class="toolbar" id="toolbar-normal" style="display:none;">
         <button id="tool-queen" class="tool-btn btn-queen active" onclick="setTool('queen')">Colocar Reina</button>
         <button id="tool-normal_nest" class="tool-btn" onclick="setTool('normal_nest')" disabled>Colocar Colonia (0/1)</button>
+        <button id="btn-developer-functions" class="tool-btn btn-predator">Developer Functions</button>
+        <div id="developer-functions-panel" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;">
+            <label class="pvp-label" for="normal-skip-wave">Saltar hasta oleada</label>
+            <input id="normal-skip-wave" type="number" min="1" max="9999" value="2"
+                style="width:76px;padding:6px;background:#14240f;color:#e9f5db;border:1px solid #74c69d;border-radius:6px;">
+            <button id="btn-normal-skip" class="tool-btn btn-center" disabled>Saltar oleadas</button>
+            <button id="btn-normal-finish" class="tool-btn btn-danger" disabled>Guardar récord y terminar</button>
+            <label class="pvp-label" style="display:flex;align-items:center;gap:5px;"><input id="dev-auto-restart" type="checkbox"> Auto reiniciar y enviar récord</label>
+        </div>
     </div>
 
     <!-- Barra de herramientas Subterráneo -->
@@ -10864,6 +10873,61 @@ function startTermiteCathedra(beacon, diff) {
     spawnHitParticles(beacon.x, beacon.y, '#dda15e', 26);
 }
 
+let developerFunctionsEnabled = false;
+function toggleDeveloperFunctions() {
+    if (developerFunctionsEnabled) {
+        developerFunctionsEnabled = false;
+        document.getElementById('developer-functions-panel').style.display = 'none';
+        document.getElementById('btn-developer-functions').textContent = 'Developer Functions';
+        return;
+    }
+    const code = window.prompt('Introduce el pass code para activar Developer Functions:');
+    if (code !== 'poyonator4000') {
+        if (code !== null) window.alert('Pass code incorrecto.');
+        return;
+    }
+    developerFunctionsEnabled = true;
+    document.getElementById('developer-functions-panel').style.display = 'flex';
+    document.getElementById('btn-developer-functions').textContent = 'Developer Functions ✓';
+}
+
+function skipNormalWaves() {
+    if (!developerFunctionsEnabled) return;
+    if (gameMode !== 'normal' || !normal || !normal.founded || endState || paused) return;
+    if (normal.phase !== 'prepare') {
+        setStatus('Solo puedes saltar oleadas durante la preparación, después de defender la colonia.', true);
+        return;
+    }
+    const input = document.getElementById('normal-skip-wave');
+    const target = Math.max(normal.wave + 1, Math.min(9999, Math.floor(Number(input && input.value) || 0)));
+    if (!Number.isFinite(target) || target <= normal.wave) {
+        setStatus('Escribe una oleada futura válida.', true);
+        return;
+    }
+    const skipped = target - normal.wave - 1;
+    if (skipped <= 0) {
+        setStatus('La siguiente oleada ya es la ' + target + '.', true);
+        return;
+    }
+    // Las oleadas omitidas cuentan como progreso alcanzado y quedan registradas en el ranking.
+    normal.bestWave = Math.max(normal.bestWave || 0, target - 1);
+    normal.wave = target - 1;
+    submitWaveScore(normal.wave, 'normal');
+    normal.timer = 0.1;
+    setStatus(`Saltaste ${skipped} oleada(s). Preparando la oleada ${target}...`, true);
+    saveGame();
+    updateUI();
+}
+
+function finishNormalRunEarly() {
+    if (!developerFunctionsEnabled) return;
+    if (gameMode !== 'normal' || !normal || !normal.founded || endState) return;
+    const survived = Math.max(0, normal.wave - (normal.phase === 'wave' ? 1 : 0));
+    if (!window.confirm(`¿Terminar esta partida y guardar ${survived} oleadas en tu récord?`)) return;
+    // endGame envía el récord al ranking y muestra el resumen de la partida.
+    endGame('defeat', 'Has terminado la partida manualmente. Tu progreso queda registrado.');
+}
+
 function finishWave() {
     for (let i = termiteNests.length - 1; i >= 0; i--) {
         if (termiteNests[i].isWaveNest && termiteNests[i].wave === normal.wave) termiteNests.splice(i, 1);
@@ -10910,6 +10974,7 @@ function finishWave() {
         addFood(15, 'berry');
         setStatus(`Oleada ${cleared} repelida · +15 · Próxima en ${Math.ceil(normal.timer)}s${vetMsg}`, vetCount > 0);
     }
+    saveGame();
     updateUI();
 }
 
@@ -11020,10 +11085,19 @@ function endGame(kind, reason) {
     paused = true;
     abilityCancelCharge();
     camera.follow = false;
+    if (gameMode === 'normal' && reason && reason.includes('manualmente')) {
+        try { localStorage.setItem('aec_normal_last_progress', JSON.stringify({
+            wave: Math.max(0, normal ? normal.wave - (normal.phase === 'wave' ? 1 : 0) : 0),
+            bestWave: normal && normal.bestWave || 0,
+            gameTime: Math.floor(gameTime),
+            species: speciesKey,
+            savedAt: Date.now()
+        })); } catch (e) {}
+    }
     try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
 
     document.getElementById('end-title').textContent = kind === 'victory' ? '¡Victoria!' : 'Derrota';
-    const survived = normal ? Math.max(0, normal.wave - 1) : 0;
+    const survived = normal ? Math.max(0, normal.wave - (normal.phase === 'wave' ? 1 : 0)) : 0;
     const best = Math.max(normal && normal.bestWave ? normal.bestWave : 0, survived);
     submitWaveScore(kind === 'victory' ? MAX_WAVES : survived, 'normal');
     const body = kind === 'victory'
@@ -11037,6 +11111,16 @@ function endGame(kind, reason) {
     }
     endScreen.classList.add('show');
     updateUI();
+    const autoRestart = document.getElementById('dev-auto-restart');
+    if (gameMode === 'normal' && developerFunctionsEnabled && autoRestart && autoRestart.checked) {
+        // endGame ya envió el récord mediante submitWaveScore; reiniciar tras mostrar el resultado.
+        window.setTimeout(() => {
+            if (endState && gameMode === 'normal') {
+                endScreen.classList.remove('show');
+                startGame('normal');
+            }
+        }, 1400);
+    }
 }
 
 function showMainMenu() {
@@ -11448,6 +11532,16 @@ function updateBuffIndicator() {
 
 function updateUI() {
     updateBuffIndicator();
+    const normalSkipBtn = document.getElementById('btn-normal-skip');
+    const normalFinishBtn = document.getElementById('btn-normal-finish');
+    const normalSkipInput = document.getElementById('normal-skip-wave');
+    const normalReady = gameMode === 'normal' && !!normal && normal.founded && !endState && !pvp;
+    if (normalSkipBtn) normalSkipBtn.disabled = !developerFunctionsEnabled || !normalReady || paused || normal.phase !== 'prepare';
+    if (normalFinishBtn) normalFinishBtn.disabled = !developerFunctionsEnabled || !normalReady;
+    if (normalSkipInput && normal) {
+        normalSkipInput.min = String(Math.max(1, normal.wave + 1));
+        if (!normalSkipInput.dataset.userEdited) normalSkipInput.value = String(Math.max(1, normal.wave + 2));
+    }
     if (pvp) { updatePvpUI(); return; }
     if (dayClockEl) dayClockEl.textContent = dayClockText();
     foodEl.textContent = Math.floor(storedFood);
@@ -14557,6 +14651,12 @@ btnSpeed.addEventListener('click', () => {
 });
 btnBehavior.addEventListener('click', cycleBehaviorMode);
 updateBehaviorUI();
+document.getElementById('btn-developer-functions').addEventListener('click', toggleDeveloperFunctions);
+document.getElementById('btn-normal-skip').addEventListener('click', skipNormalWaves);
+document.getElementById('btn-normal-finish').addEventListener('click', finishNormalRunEarly);
+document.getElementById('normal-skip-wave').addEventListener('input', event => {
+    event.currentTarget.dataset.userEdited = '1';
+});
 document.getElementById('btn-end-restart').addEventListener('click', () => {
     endScreen.classList.remove('show');
     if (pvp) { showMainMenu(); return; }

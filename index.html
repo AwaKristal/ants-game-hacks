@@ -906,6 +906,22 @@
                 <button id="btn-ranking-back" class="menu-btn btn-menu-back">Volver</button>
             </div>
         </div>
+        <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;align-items:center;">
+            <button id="btn-admin-panel" class="tool-btn btn-danger">Admin Panel</button>
+            <div id="admin-panel" style="display:none;width:min(100%,680px);align-items:center;gap:8px;flex-wrap:wrap;padding:10px;border:1px solid #d97757;border-radius:8px;background:#211713;box-sizing:border-box;">
+                <strong style="color:#ffb199;flex-basis:100%;">Administración de baneos locales</strong>
+                <input id="admin-ban-user" type="text" maxlength="40" placeholder="Nombre de usuario" style="width:150px;padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
+                <input id="admin-ban-duration" type="number" min="0" max="1000000" value="1" style="width:78px;padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
+                <select id="admin-ban-unit" style="padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
+                    <option value="minutes">Minutos</option><option value="hours">Horas</option><option value="days" selected>Días</option><option value="weeks">Semanas</option><option value="permanent">Permanente</option>
+                </select>
+                <input id="admin-ban-reason" type="text" maxlength="120" placeholder="Motivo (opcional)" style="width:170px;padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
+                <button id="btn-admin-ban" class="tool-btn btn-danger">Aplicar baneo</button>
+                <button id="btn-admin-refresh" class="tool-btn">Actualizar lista</button>
+                <div id="admin-ban-list" style="flex-basis:100%;color:#f5dfd5;font-size:12px;">No hay baneos guardados en este navegador.</div>
+                <small style="flex-basis:100%;color:#d8b7aa;">Aviso: esta versión guarda la lista solo en este navegador. No puede bloquear cuentas de otros jugadores ni modificar el ranking del servidor sin backend.</small>
+            </div>
+        </div>
     </div>
 
     <!-- Índice de mobs -->
@@ -1158,20 +1174,7 @@
             <button id="btn-normal-finish" class="tool-btn btn-danger" disabled>Guardar récord y terminar</button>
             <label class="pvp-label" style="display:flex;align-items:center;gap:5px;"><input id="dev-auto-restart" type="checkbox"> Auto reiniciar y enviar récord</label>
         </div>
-        <button id="btn-admin-panel" class="tool-btn btn-danger">Admin Panel</button>
-        <div id="admin-panel" style="display:none;flex-basis:100%;align-items:center;gap:8px;flex-wrap:wrap;padding:10px;border:1px solid #d97757;border-radius:8px;background:#211713;">
-            <strong style="color:#ffb199;">Administración de baneos locales</strong>
-            <input id="admin-ban-user" type="text" maxlength="40" placeholder="Nombre de usuario" style="width:150px;padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
-            <input id="admin-ban-duration" type="number" min="0" max="1000000" value="1" style="width:78px;padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
-            <select id="admin-ban-unit" style="padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
-                <option value="minutes">Minutos</option><option value="hours">Horas</option><option value="days" selected>Días</option><option value="weeks">Semanas</option><option value="permanent">Permanente</option>
-            </select>
-            <input id="admin-ban-reason" type="text" maxlength="120" placeholder="Motivo (opcional)" style="width:170px;padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
-            <button id="btn-admin-ban" class="tool-btn btn-danger">Aplicar baneo</button>
-            <button id="btn-admin-refresh" class="tool-btn">Actualizar lista</button>
-            <div id="admin-ban-list" style="flex-basis:100%;color:#f5dfd5;font-size:12px;">No hay baneos guardados en este navegador.</div>
-            <small style="flex-basis:100%;color:#d8b7aa;">Aviso: esta versión guarda la lista solo en este navegador. No puede bloquear cuentas de otros jugadores ni modificar el ranking del servidor sin backend.</small>
-        </div>
+
     </div>
 
     <!-- Barra de herramientas Subterráneo -->

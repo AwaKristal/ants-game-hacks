@@ -1158,6 +1158,20 @@
             <button id="btn-normal-finish" class="tool-btn btn-danger" disabled>Guardar récord y terminar</button>
             <label class="pvp-label" style="display:flex;align-items:center;gap:5px;"><input id="dev-auto-restart" type="checkbox"> Auto reiniciar y enviar récord</label>
         </div>
+        <button id="btn-admin-panel" class="tool-btn btn-danger">Admin Panel</button>
+        <div id="admin-panel" style="display:none;flex-basis:100%;align-items:center;gap:8px;flex-wrap:wrap;padding:10px;border:1px solid #d97757;border-radius:8px;background:#211713;">
+            <strong style="color:#ffb199;">Administración de baneos locales</strong>
+            <input id="admin-ban-user" type="text" maxlength="40" placeholder="Nombre de usuario" style="width:150px;padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
+            <input id="admin-ban-duration" type="number" min="0" max="1000000" value="1" style="width:78px;padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
+            <select id="admin-ban-unit" style="padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
+                <option value="minutes">Minutos</option><option value="hours">Horas</option><option value="days" selected>Días</option><option value="weeks">Semanas</option><option value="permanent">Permanente</option>
+            </select>
+            <input id="admin-ban-reason" type="text" maxlength="120" placeholder="Motivo (opcional)" style="width:170px;padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
+            <button id="btn-admin-ban" class="tool-btn btn-danger">Aplicar baneo</button>
+            <button id="btn-admin-refresh" class="tool-btn">Actualizar lista</button>
+            <div id="admin-ban-list" style="flex-basis:100%;color:#f5dfd5;font-size:12px;">No hay baneos guardados en este navegador.</div>
+            <small style="flex-basis:100%;color:#d8b7aa;">Aviso: esta versión guarda la lista solo en este navegador. No puede bloquear cuentas de otros jugadores ni modificar el ranking del servidor sin backend.</small>
+        </div>
     </div>
 
     <!-- Barra de herramientas Subterráneo -->
@@ -10891,6 +10905,56 @@ function toggleDeveloperFunctions() {
     document.getElementById('btn-developer-functions').textContent = 'Developer Functions ✓';
 }
 
+let adminPanelUnlocked = false;
+const LOCAL_BANS_KEY = 'aec_local_admin_bans_v1';
+function readLocalBans() {
+    try { const value = JSON.parse(localStorage.getItem(LOCAL_BANS_KEY) || '[]'); return Array.isArray(value) ? value : []; }
+    catch (_) { return []; }
+}
+function saveLocalBans(bans) { localStorage.setItem(LOCAL_BANS_KEY, JSON.stringify(bans)); }
+function formatBanExpiry(ban) {
+    if (!ban.expiresAt) return 'Permanente';
+    const remaining = ban.expiresAt - Date.now();
+    if (remaining <= 0) return 'Expirado';
+    const hours = Math.ceil(remaining / 3600000);
+    if (hours < 24) return 'Quedan ' + hours + ' h';
+    return 'Quedan ' + Math.ceil(hours / 24) + ' días';
+}
+function renderAdminBanList() {
+    const now = Date.now();
+    const bans = readLocalBans();
+    const active = bans.filter(b => !b.expiresAt || b.expiresAt > now);
+    saveLocalBans(active);
+    const host = document.getElementById('admin-ban-list');
+    if (!active.length) { host.textContent = 'No hay baneos activos guardados en este navegador.'; return; }
+    host.innerHTML = active.map((b, i) => `<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:5px 0;border-bottom:1px solid #68463b;"><span><b>${escapeHtml(b.username)}</b> — ${escapeHtml(formatBanExpiry(b))}${b.reason ? ' — ' + escapeHtml(b.reason) : ''}</span><button class="tool-btn" data-unban-index="${i}" style="padding:4px 8px;">Desbanear</button></div>`).join('');
+    host.querySelectorAll('[data-unban-index]').forEach(button => button.addEventListener('click', () => {
+        const current = readLocalBans(); const activeNow = current.filter(b => !b.expiresAt || b.expiresAt > Date.now());
+        activeNow.splice(Number(button.dataset.unbanIndex), 1); saveLocalBans(activeNow); renderAdminBanList();
+    }));
+}
+function unlockAdminPanel() {
+    if (adminPanelUnlocked) { adminPanelUnlocked = false; document.getElementById('admin-panel').style.display = 'none'; document.getElementById('btn-admin-panel').textContent = 'Admin Panel'; return; }
+    const code = window.prompt('Contraseña del Admin Panel:');
+    if (code !== 'poyonator4000') { if (code !== null) window.alert('Contraseña incorrecta.'); return; }
+    adminPanelUnlocked = true; document.getElementById('admin-panel').style.display = 'flex';
+    document.getElementById('btn-admin-panel').textContent = 'Admin Panel ✓'; renderAdminBanList();
+}
+function applyLocalBan() {
+    if (!adminPanelUnlocked) return;
+    const username = document.getElementById('admin-ban-user').value.trim();
+    if (!username) { alert('Escribe el nombre del jugador.'); return; }
+    const amount = Math.max(0, Number(document.getElementById('admin-ban-duration').value) || 0);
+    const unit = document.getElementById('admin-ban-unit').value;
+    const multipliers = { minutes: 60000, hours: 3600000, days: 86400000, weeks: 604800000 };
+    const expiresAt = unit === 'permanent' || amount === 0 ? 0 : Date.now() + amount * (multipliers[unit] || 86400000);
+    const reason = document.getElementById('admin-ban-reason').value.trim();
+    const bans = readLocalBans().filter(b => b.username.toLowerCase() !== username.toLowerCase());
+    bans.push({ username, reason, createdAt: Date.now(), expiresAt }); saveLocalBans(bans);
+    document.getElementById('admin-ban-user').value = ''; renderAdminBanList();
+    alert('Baneo guardado en la lista local para ' + username + '.');
+}
+
 function skipNormalWaves() {
     if (!developerFunctionsEnabled) return;
     if (gameMode !== 'normal' || !normal || !normal.founded || endState || paused) return;
@@ -14652,6 +14716,9 @@ btnSpeed.addEventListener('click', () => {
 btnBehavior.addEventListener('click', cycleBehaviorMode);
 updateBehaviorUI();
 document.getElementById('btn-developer-functions').addEventListener('click', toggleDeveloperFunctions);
+document.getElementById('btn-admin-panel').addEventListener('click', unlockAdminPanel);
+document.getElementById('btn-admin-ban').addEventListener('click', applyLocalBan);
+document.getElementById('btn-admin-refresh').addEventListener('click', renderAdminBanList);
 document.getElementById('btn-normal-skip').addEventListener('click', skipNormalWaves);
 document.getElementById('btn-normal-finish').addEventListener('click', finishNormalRunEarly);
 document.getElementById('normal-skip-wave').addEventListener('input', event => {

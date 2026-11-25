@@ -599,6 +599,56 @@
     }
     #btn-auth-skip:hover { border-color: #95d5b2; color: #e9f5db; }
     .auth-server { font-size: 0.66rem; color: #7d9b8a; word-break: break-all; }
+    #btn-admin-open {
+        background: transparent;
+        border: 1px solid #52796f;
+        color: #95d5b2;
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 0.72rem;
+        cursor: pointer;
+        font-family: inherit;
+        align-self: flex-end;
+    }
+    #btn-admin-open:hover { border-color: #95d5b2; color: #e9f5db; }
+    #admin-screen h1 { font-size: 2rem; }
+    .admin-box {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        width: 100%;
+        max-width: 430px;
+        background: rgba(20, 30, 18, 0.96);
+        border: 1px solid #9d4edd;
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow: 0 12px 34px rgba(0, 0, 0, 0.65);
+        text-align: left;
+    }
+    .admin-box input[type="text"], .admin-box input[type="password"], .admin-box input[type="number"], .admin-box select {
+        background: #14240f;
+        color: #e9f5db;
+        border: 1px solid #9d4edd;
+        border-radius: 8px;
+        padding: 9px 11px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        min-width: 0;
+    }
+    .admin-box input[type="number"] { width: 110px; }
+    .admin-box .menu-btn { padding: 9px 12px; font-size: 0.84rem; }
+    #admin-status { font-size: 0.8rem; color: #b7e4c7; min-height: 1.1em; }
+    #admin-status.bad { color: #ff8fa3; }
+    .admin-list {
+        max-height: 150px;
+        overflow-y: auto;
+        font-size: 0.78rem;
+        color: #e0aaff;
+        background: rgba(0,0,0,0.3);
+        border-radius: 8px;
+        padding: 7px 9px;
+    }
+    .admin-list div { padding: 2px 0; }
     .play-btn {
         padding: 18px 78px;
         font-size: 1.5rem;
@@ -829,6 +879,17 @@
     .card-progress i { display:block; height:100%; width:0; border-radius:5px;
         background:linear-gradient(90deg,#52b788,#ffd166); transition:width 0.25s; }
     .card-tile.species .card-progress i { background:linear-gradient(90deg,#ffd166,#e09f3e); }
+    .research-box, .missions-box { border:1px solid rgba(149,213,178,0.35); border-radius:10px; padding:10px 12px; background:rgba(8,14,6,0.5); }
+    .research-title { font-size:0.8rem; font-weight:bold; color:#b5e48c; margin-bottom:8px; letter-spacing:0.5px; }
+    .research-grid, .missions-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; }
+    .research-node { border:1px solid #6d5a9c; border-radius:9px; padding:8px; background:linear-gradient(180deg,#2c2145,#140e24); text-align:left; }
+    .research-node b { color:#ffd166; font-size:0.78rem; display:block; }
+    .research-node small { color:#c9b6e4; font-size:0.62rem; display:block; margin:3px 0 6px; }
+    .research-node button, .mission-row button { width:100%; padding:5px; font-size:0.68rem; border-radius:6px; cursor:pointer; }
+    .mission-row { border:1px solid rgba(255,209,102,0.32); border-radius:8px; padding:7px 9px; font-size:0.7rem; color:#e9f5db; background:rgba(20,30,18,0.7); }
+    .mission-row.done { border-color:#95d5b2; color:#b5e48c; }
+    .mission-row .mbar { height:4px; border-radius:4px; background:rgba(255,255,255,0.13); margin-top:5px; overflow:hidden; }
+    .mission-row .mbar i { display:block; height:100%; background:linear-gradient(90deg,#52b788,#ffd166); }
     .card-tile.species { border-color:#ffd166; background:linear-gradient(180deg,#4a3413,#1d1305); }
     .card-tile .card-name { font-weight:bold; color:#f4f1de; font-size:0.92rem; }
     .card-tile .card-sub { font-size:0.68rem; color:#c9b6e4; line-height:1.3; }
@@ -903,23 +964,8 @@
             <div id="ranking-status">—</div>
             <div class="rooms-row">
                 <button id="btn-ranking-refresh" class="menu-btn btn-mode-sandbox">Actualizar</button>
+                <button id="btn-ranking-admin" class="menu-btn btn-mode-normal" style="display:none;">Panel de administración</button>
                 <button id="btn-ranking-back" class="menu-btn btn-menu-back">Volver</button>
-            </div>
-        </div>
-        <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;align-items:center;">
-            <button id="btn-admin-panel" class="tool-btn btn-danger">Admin Panel</button>
-            <div id="admin-panel" style="display:none;width:min(100%,680px);align-items:center;gap:8px;flex-wrap:wrap;padding:10px;border:1px solid #d97757;border-radius:8px;background:#211713;box-sizing:border-box;">
-                <strong style="color:#ffb199;flex-basis:100%;">Administración de baneos locales</strong>
-                <input id="admin-ban-user" type="text" maxlength="40" placeholder="Nombre de usuario" style="width:150px;padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
-                <input id="admin-ban-duration" type="number" min="0" max="1000000" value="1" style="width:78px;padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
-                <select id="admin-ban-unit" style="padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
-                    <option value="minutes">Minutos</option><option value="hours">Horas</option><option value="days" selected>Días</option><option value="weeks">Semanas</option><option value="permanent">Permanente</option>
-                </select>
-                <input id="admin-ban-reason" type="text" maxlength="120" placeholder="Motivo (opcional)" style="width:170px;padding:7px;background:#14240f;color:#e9f5db;border:1px solid #d97757;border-radius:6px;">
-                <button id="btn-admin-ban" class="tool-btn btn-danger">Aplicar baneo</button>
-                <button id="btn-admin-refresh" class="tool-btn">Actualizar lista</button>
-                <div id="admin-ban-list" style="flex-basis:100%;color:#f5dfd5;font-size:12px;">No hay baneos guardados en este navegador.</div>
-                <small style="flex-basis:100%;color:#d8b7aa;">Aviso: esta versión guarda la lista solo en este navegador. No puede bloquear cuentas de otros jugadores ni modificar el ranking del servidor sin backend.</small>
             </div>
         </div>
     </div>
@@ -934,6 +980,46 @@
             <div class="rooms-row">
                 <button id="btn-index-back" class="menu-btn btn-menu-back">Volver</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Panel de administración -->
+    <div id="admin-screen" class="overlay">
+        <h1>Panel de administración</h1>
+        <p>Banea por usuario o por identidad (dispositivo, IP, email). Al banear un usuario también se banean sus señales, para que no entre con otra cuenta desde el mismo navegador o red.</p>
+        <div class="admin-box">
+            <label class="rooms-label" for="admin-user">Usuario</label>
+            <input id="admin-user" type="text" maxlength="16" spellcheck="false" autocomplete="off" placeholder="Nombre exacto del usuario">
+            <label class="rooms-label" for="admin-minutes">Duración del ban</label>
+            <div class="rooms-row">
+                <input id="admin-minutes" type="number" min="1" max="525600" value="60">
+                <select id="admin-unit">
+                    <option value="1">Minutos</option>
+                    <option value="60" selected>Horas</option>
+                    <option value="1440">Días</option>
+                </select>
+            </div>
+            <div class="rooms-row">
+                <button id="btn-admin-ban" class="menu-btn btn-mode-normal">Banear</button>
+                <button id="btn-admin-unban" class="menu-btn btn-mode-sandbox">Desbanear</button>
+                <button id="btn-admin-refresh" class="menu-btn btn-mode-sandbox">Ver baneos</button>
+            </div>
+            <div class="rooms-row">
+                <select id="admin-id-kind">
+                    <option value="device">Dispositivo</option>
+                    <option value="ip">IP</option>
+                    <option value="email">Email</option>
+                    <option value="user">Usuario</option>
+                </select>
+                <input id="admin-id-value" type="text" maxlength="256" spellcheck="false" autocomplete="off" placeholder="Valor de la identidad">
+            </div>
+            <div class="rooms-row">
+                <button id="btn-admin-id-ban" class="menu-btn btn-mode-normal">Banear identidad</button>
+                <button id="btn-admin-id-unban" class="menu-btn btn-mode-sandbox">Quitar ban</button>
+            </div>
+            <div id="admin-status">—</div>
+            <div id="admin-list" class="admin-list"><div>Sin datos. Pulsa «Ver baneos».</div></div>
+            <button id="btn-admin-back" class="menu-btn btn-menu-back">Volver</button>
         </div>
     </div>
 
@@ -972,6 +1058,11 @@
                 <option value="crematogaster">Crematogaster opuntiae</option>
                 <option value="lasius">Lasius niger</option>
                 <option value="colobopsis">Colobopsis explodens</option>
+                <option value="solenopsis">Solenopsis invicta</option>
+                <option value="oecophylla">Oecophylla smaragdina</option>
+                <option value="dorylus">Dorylus nigricans</option>
+                <option value="polyergus">Polyergus rufescens</option>
+                <option value="formica">Formica rufa</option>
             </select>
             <div id="rooms-status">Desconectado</div>
             <div id="rooms-panel">
@@ -1011,6 +1102,11 @@
                     <option value="crematogaster">Crematogaster opuntiae</option>
                 <option value="lasius">Lasius niger</option>
                 <option value="colobopsis">Colobopsis explodens</option>
+                <option value="solenopsis">Solenopsis invicta</option>
+                <option value="oecophylla">Oecophylla smaragdina</option>
+                <option value="dorylus">Dorylus nigricans</option>
+                <option value="polyergus">Polyergus rufescens</option>
+                <option value="formica">Formica rufa</option>
                 </select>
                 <button id="btn-inf-create" class="menu-btn btn-mode-normal">Crear nuevo mundo</button>
             </div>
@@ -1042,6 +1138,13 @@
                     <div class="card-progress"><i id="major-progress"></i></div>
                     <button id="btn-up-major">Subir de nivel</button>
                 </div>
+                <div class="card-tile">
+                    <div class="card-name">Carta de soldado</div>
+                    <div class="card-count" id="card-soldier-count">0</div>
+                    <div class="card-sub">Nivel <span id="soldier-level">1</span> · necesita <span id="soldier-need">2</span> cartas</div>
+                    <div class="card-progress"><i id="soldier-progress"></i></div>
+                    <button id="btn-up-soldier">Subir de nivel</button>
+                </div>
                 <div class="card-tile species">
                     <div class="card-name">Cartas de especie</div>
                     <div class="card-count" id="card-species-count">0</div>
@@ -1058,6 +1161,19 @@
                     <button id="btn-use-sugar">Usar 1 azúcar</button>
                 </div>
                 <div class="card-sub">La miel y el azúcar NO se activan al recogerlos: usa una unidad cuando quieras. Miel: +25% daño y +15% velocidad durante 5 min. Azúcar: +6.25% daño y +3.75% velocidad durante 90s (75% menos).</div>
+            </div>
+            <div class="research-box">
+                <div class="research-title">Investigación (usa cartas duplicadas)</div>
+                <div class="research-grid" id="research-grid"></div>
+            </div>
+            <div class="missions-box">
+                <div class="research-title">Misiones</div>
+                <div id="missions-list" class="missions-list">—</div>
+            </div>
+            <div class="rooms-row">
+                <button id="btn-export-save">Exportar partida</button>
+                <button id="btn-import-save">Importar partida</button>
+                <input id="import-save-file" type="file" accept="application/json,.json" style="display:none;">
             </div>
             <div id="cards-status" style="font-size:0.8rem;color:#b7e4c7;min-height:1.2em;">—</div>
             <div class="rooms-row">
@@ -1112,6 +1228,7 @@
         <div class="stat stat-egg normal-only">Huevos: <span id="egg-count">0</span></div>
         <div class="stat">Nidos: <span id="nest-count">0</span></div>
         <div class="stat">Bioma: <span id="biome-name">—</span></div>
+        <div class="stat">Estación: <span id="season-badge">Primavera</span></div>
         <div class="stat">Ciclo: <span id="day-clock">Día 3:00</span></div>
         <div class="stat normal-only"><span id="species-label">—</span></div>
         <div class="stat pvp-only">Rivales: <span id="pvp-foe">—</span></div>
@@ -1142,6 +1259,11 @@
             <option value="crematogaster">Crematogaster opuntiae</option>
                 <option value="lasius">Lasius niger</option>
                 <option value="colobopsis">Colobopsis explodens</option>
+                <option value="solenopsis">Solenopsis invicta</option>
+                <option value="oecophylla">Oecophylla smaragdina</option>
+                <option value="dorylus">Dorylus nigricans</option>
+                <option value="polyergus">Polyergus rufescens</option>
+                <option value="formica">Formica rufa</option>
         </select>
         <button id="tool-sandbox_queen" class="tool-btn btn-queen" onclick="setTool('sandbox_queen')">Reina</button>
         <button id="tool-sandbox_nest" class="tool-btn btn-fungus" onclick="setTool('sandbox_nest')">Colonia</button>
@@ -1159,22 +1281,23 @@
         <button id="tool-wasp" class="tool-btn btn-predator" onclick="setTool('wasp')">Avispa Cazadora</button>
         <button id="tool-assassin" class="tool-btn btn-predator" onclick="setTool('assassin')">Chinche Asesina</button>
         <button id="tool-anteater" class="tool-btn btn-predator" onclick="setTool('anteater')">Oso Hormiguero (Jefe)</button>
+        <button id="tool-rhino" class="tool-btn btn-predator" onclick="setTool('rhino')">Escarabajo Rinoceronte (Jefe)</button>
+        <button id="tool-hornet" class="tool-btn btn-predator" onclick="setTool('hornet')">Avispa Gigante (Jefe)</button>
+        <button id="tool-lizard" class="tool-btn btn-predator" onclick="setTool('lizard')">Lagarto (Jefe)</button>
     </div>
 
     <!-- Barra de herramientas Modo Normal (Historia) -->
     <div class="toolbar" id="toolbar-normal" style="display:none;">
         <button id="tool-queen" class="tool-btn btn-queen active" onclick="setTool('queen')">Colocar Reina</button>
         <button id="tool-normal_nest" class="tool-btn" onclick="setTool('normal_nest')" disabled>Colocar Colonia (0/1)</button>
-        <button id="btn-developer-functions" class="tool-btn btn-predator">Developer Functions</button>
+        <button id="btn-developer-functions" class="tool-btn btn-predator" type="button">Developer Functions</button>
         <div id="developer-functions-panel" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;">
             <label class="pvp-label" for="normal-skip-wave">Saltar hasta oleada</label>
-            <input id="normal-skip-wave" type="number" min="1" max="9999" value="2"
-                style="width:76px;padding:6px;background:#14240f;color:#e9f5db;border:1px solid #74c69d;border-radius:6px;">
-            <button id="btn-normal-skip" class="tool-btn btn-center" disabled>Saltar oleadas</button>
-            <button id="btn-normal-finish" class="tool-btn btn-danger" disabled>Guardar récord y terminar</button>
+            <input id="normal-skip-wave" type="number" min="2" max="9999" value="2" style="width:76px;padding:6px;background:#14240f;color:#e9f5db;border:1px solid #74c69d;border-radius:6px;">
+            <button id="btn-normal-skip" class="tool-btn btn-center" type="button">Saltar oleadas</button>
+            <button id="btn-normal-finish" class="tool-btn btn-danger" type="button">Guardar récord y terminar</button>
             <label class="pvp-label" style="display:flex;align-items:center;gap:5px;"><input id="dev-auto-restart" type="checkbox"> Auto reiniciar y enviar récord</label>
         </div>
-
     </div>
 
     <!-- Barra de herramientas Subterráneo -->
@@ -1183,6 +1306,7 @@
         <button id="tool-queen_chamber" class="tool-btn btn-queen" onclick="setUGTool('queen_chamber')">Cámara de reina (5 huevos)</button>
         <button id="tool-food_chamber" class="tool-btn" onclick="setUGTool('food_chamber')">Cámara de comida (+80)</button>
         <button id="tool-major_chamber" class="tool-btn btn-predator" onclick="setUGTool('major_chamber')">Sala de majors (5)</button>
+        <button id="tool-fungus_chamber" class="tool-btn btn-fungus" onclick="setUGTool('fungus_chamber')">Cámara fúngica (gratis)</button>
         <button id="ug-exit" class="tool-btn btn-menu-back">Salir al exterior</button>
     </div>
 
@@ -1199,6 +1323,7 @@
         <span class="pvp-label">Casta de la cría:</span>
         <button id="caste-worker" class="caste-btn active" onclick="setCaste('worker')">Obrera</button>
         <button id="caste-major" class="caste-btn" onclick="setCaste('major')">Major</button>
+        <button id="caste-soldier" class="caste-btn" onclick="setCaste('soldier')">Soldado</button>
         <span class="pvp-label">Huevos: <span id="egg-cap-label">0/5</span> · Comida: <span id="food-cap-label2">100</span></span>
         <span class="pvp-label">Majors en ataque:</span>
         <input id="major-raid-count" type="number" min="1" max="30" value="5" style="width:58px;padding:5px;background:#14240f;color:#e9f5db;border:1px solid #74c69d;border-radius:6px;">
@@ -1231,6 +1356,8 @@
             <div>Cámaras reina: <strong id="ug-queen-rooms">0</strong></div>
             <div>Cámaras comida: <strong id="ug-food-rooms">0</strong></div>
             <div>Salas de majors: <strong id="ug-major-rooms">0</strong></div>
+            <div>Cámaras fúngicas: <strong id="ug-fungus-rooms">0</strong></div>
+            <div id="ug-fungus-status" style="display:none;">Hongo: <strong id="ug-fungus-hunger">100%</strong> · Bono: <strong id="ug-fungus-bonus">+0%</strong></div>
             <div>Excavadas: <strong id="ug-dug">0</strong></div>
             <div>Herramienta: <strong id="ug-tool-label">Excavar</strong></div>
         </div>
@@ -1517,7 +1644,7 @@ const FOOD_TYPES = {
 const BERRY_SPAWN_INTERVAL = 300;
 const BERRY_LIFETIME = 300;
 const HONEY_CHANCE = 0.004;
-const SPECIES_CARD_KEYS = ['camponotus','leptogenys','odontomachus','cephalotes','atta','allomerus','myrmecia','crematogaster','lasius','colobopsis'];
+const SPECIES_CARD_KEYS = ['camponotus','leptogenys','odontomachus','cephalotes','atta','allomerus','myrmecia','crematogaster','lasius','colobopsis','solenopsis','oecophylla','dorylus','polyergus','formica'];
 const CARD_LEVEL_GAIN = 0.075;
 const UG_COLS = 30;
 const UG_ROWS = 18;
@@ -1536,7 +1663,7 @@ const SPECIES = {
         traits: ['Nido obligatorio en árboles', 'Mucha más vida', 'Más daño', 'Sin habilidades'],
         nestStyle: 'tree',
         queenHp: 640, queenDamage: 3.4, queenSpeed: 2.7,
-        workerHp: 44, workerDamage: 1.5, workerSpeed: 2.2, workerScale: 1.16,
+        workerHp: 46, workerDamage: 1.35, workerSpeed: 2.15, workerScale: 1.16,
         venom: false, workerCharge: false
     },
     leptogenys: {
@@ -1548,7 +1675,7 @@ const SPECIES = {
         traits: ['Aguijón venenoso', 'Incursión automática', 'Termitero más cercano', 'Nido de hojarasca'],
         nestStyle: 'litter',
         queenHp: 390, queenDamage: 2.6, queenSpeed: 3.05,
-        workerHp: 26, workerDamage: 0.75, workerSpeed: 2.5, workerScale: 0.98,
+        workerHp: 29, workerDamage: 0.95, workerSpeed: 2.4, workerScale: 0.98,
         venom: true, workerCharge: false
     },
     odontomachus: {
@@ -1560,7 +1687,7 @@ const SPECIES = {
         traits: ['Nido volcán de tierra', 'Mandíbula cargada (obreras)', 'Salto autolesivo', 'Carga de reina'],
         nestStyle: 'volcano',
         queenHp: 430, queenDamage: 3.0, queenSpeed: 2.85,
-        workerHp: 30, workerDamage: 0.9, workerSpeed: 2.3, workerScale: 1.05,
+        workerHp: 28, workerDamage: 1.05, workerSpeed: 2.35, workerScale: 1.05,
         venom: false, workerCharge: true
     },
     cephalotes: {
@@ -1572,7 +1699,7 @@ const SPECIES = {
         traits: ['Nido obligatorio en árboles', 'Mucha vida, poco daño', 'Espinas defensivas', 'Formación tortuga'],
         nestStyle: 'tree',
         queenHp: 560, queenDamage: 2.4, queenSpeed: 2.75,
-        workerHp: 52, workerDamage: 0.62, workerSpeed: 2.05, workerScale: 1.12,
+        workerHp: 52, workerDamage: 0.65, workerSpeed: 2.05, workerScale: 1.12,
         venom: false, workerCharge: false, thorns: true, defender: true
     },
     atta: {
@@ -1580,11 +1707,11 @@ const SPECIES = {
         name: 'Atta cephalotes',
         family: 'Atta',
         title: 'Cortadora de hojas',
-        blurb: 'En vez de nido funda un jardín de hongo que las obreras deben alimentar cada segundo. A cambio, el hongo les da más vida y daño, una IA excelente y la capacidad de cortar hojas. Cada oleada superada las vuelve más oscuras y fuertes.',
-        traits: ['Hongo que alimentar', 'IA mejorada', 'Corta hojas', 'Veteranas +7.5% por oleada'],
-        nestStyle: 'fungus',
+        blurb: 'Funda una colonia normal, pero es la ÚNICA especie que puede excavar cámaras fúngicas subterráneas. La primera es gratis y cada otra cuesta 500 de comida. Producen comida y dan +35% de vida y daño con la primera cámara y +12% por cada una adicional, pero hay que alimentar el hongo: si muere de hambre, muere la colonia.',
+        traits: ['Colonia normal', 'Cámaras fúngicas exclusivas', '+35% primera cámara', '+12% por cámara extra', 'El hongo debe comer'],
+        nestStyle: 'classic',
         queenHp: 470, queenDamage: 2.8, queenSpeed: 2.9,
-        workerHp: 34, workerDamage: 0.85, workerSpeed: 2.35, workerScale: 1.04,
+        workerHp: 36, workerDamage: 0.9, workerSpeed: 2.3, workerScale: 1.04,
         venom: false, workerCharge: false, fungus: true
     },
     allomerus: {
@@ -1596,7 +1723,7 @@ const SPECIES = {
         traits: ['Trampa de galería', 'Máximo 3 trampas', 'Refuerzos +30% daño', 'Nido arbóreo'],
         nestStyle: 'tree',
         queenHp: 420, queenDamage: 2.6, queenSpeed: 2.65,
-        workerHp: 28, workerDamage: 0.95, workerSpeed: 2.15, workerScale: 0.94,
+        workerHp: 30, workerDamage: 0.9, workerSpeed: 2.2, workerScale: 0.94,
         venom: false, workerCharge: false, gallery: true
     },
     myrmecia: {
@@ -1608,7 +1735,7 @@ const SPECIES = {
         traits: ['Mándíbulas aplastantes', '250% daño + aturde 1s', 'Aguijón venenoso', 'Visión de cazadora', 'Nido subterráneo'],
         nestStyle: 'classic',
         queenHp: 530, queenDamage: 3.5, queenSpeed: 2.75,
-        workerHp: 50, workerDamage: 1.8, workerSpeed: 2.4, workerScale: 1.22,
+        workerHp: 48, workerDamage: 1.7, workerSpeed: 2.35, workerScale: 1.22,
         venom: false, workerCharge: false, hunterVision: true, crushingMandibles: true
     },
     crematogaster: {
@@ -1620,7 +1747,7 @@ const SPECIES = {
         traits: ['Refugio de cactus', '15% menos daño cerca del nido', 'Rocío ácido', 'Nido de cactus'],
         nestStyle: 'cactus',
         queenHp: 470, queenDamage: 2.6, queenSpeed: 2.8,
-        workerHp: 38, workerDamage: 1.0, workerSpeed: 2.3, workerScale: 1.0,
+        workerHp: 36, workerDamage: 0.95, workerSpeed: 2.35, workerScale: 1.0,
         venom: false, workerCharge: false, cactusShelter: true, acid: true
     },
     lasius: {
@@ -1632,7 +1759,7 @@ const SPECIES = {
         traits: ['Nido obligatorio en árboles', 'Llama 1-3 pulgones al azar', 'Miel constante de los pulgones', 'Los enemigos cazan pulgones'],
         nestStyle: 'tree',
         queenHp: 430, queenDamage: 2.5, queenSpeed: 2.85,
-        workerHp: 30, workerDamage: 0.85, workerSpeed: 2.3, workerScale: 0.98,
+        workerHp: 30, workerDamage: 0.85, workerSpeed: 2.35, workerScale: 0.98,
         venom: false, workerCharge: false, aphidTending: true
     },
     colobopsis: {
@@ -1644,8 +1771,68 @@ const SPECIES = {
         traits: ['Nido obligatorio en árboles', 'Explosión al morir', 'Líquido corrosivo', 'Daño en área'],
         nestStyle: 'tree',
         queenHp: 400, queenDamage: 2.4, queenSpeed: 2.7,
-        workerHp: 26, workerDamage: 0.8, workerSpeed: 2.2, workerScale: 0.96,
+        workerHp: 25, workerDamage: 0.75, workerSpeed: 2.25, workerScale: 0.96,
         venom: false, workerCharge: false, explosive: true
+    },
+    solenopsis: {
+        key: 'solenopsis',
+        name: 'Solenopsis invicta',
+        family: 'Solenopsis',
+        title: 'Hormiga de fuego',
+        blurb: 'Anida en el suelo y ataca en enjambre. Sus mordidas inyectan veneno de acción continua: los enemigos que se acercan a tus obreras se envenenan y siguen perdiendo vida mucho después.',
+        traits: ['Enjambre venenoso', 'Veneno persistente', 'Nido subterráneo', 'Ataque en grupo'],
+        nestStyle: 'classic',
+        queenHp: 420, queenDamage: 2.8, queenSpeed: 2.8,
+        workerHp: 27, workerDamage: 0.85, workerSpeed: 2.5, workerScale: 0.95,
+        venom: true, workerCharge: false, swarm: true
+    },
+    oecophylla: {
+        key: 'oecophylla',
+        name: 'Oecophylla smaragdina',
+        family: 'Oecophylla',
+        title: 'Hormiga tejedora verde',
+        blurb: 'Anida SOLO en árboles y teje nidos de hojas vivas. Sus obreras son más resistentes y recolectan hojas que se convierten en comida para la colonia.',
+        traits: ['Nido obligatorio en árboles', 'Nido de hojas vivas', 'Obreras resistentes', 'Hojas como comida'],
+        nestStyle: 'tree',
+        queenHp: 400, queenDamage: 2.3, queenSpeed: 2.8,
+        workerHp: 38, workerDamage: 1.1, workerSpeed: 2.45, workerScale: 0.95,
+        venom: false, workerCharge: false, leafNest: true
+    },
+    dorylus: {
+        key: 'dorylus',
+        name: 'Dorylus nigricans',
+        family: 'Dorylus',
+        title: 'Hormiga legionaria',
+        blurb: 'No construye nidos fijos: avanza en columnas nómades. Sus obreras son más rápidas y dañinas, y arrasan termiteros con incursiones constantes.',
+        traits: ['Columna nómada', '+20% velocidad', '+12% daño', 'Incursiones frecuentes'],
+        nestStyle: 'classic',
+        queenHp: 520, queenDamage: 3.2, queenSpeed: 2.5,
+        workerHp: 27, workerDamage: 0.95, workerSpeed: 2.65, workerScale: 0.92,
+        venom: false, workerCharge: false, nomadic: true
+    },
+    polyergus: {
+        key: 'polyergus',
+        name: 'Polyergus rufescens',
+        family: 'Polyergus',
+        title: 'Hormiga esclavista',
+        blurb: 'No cría a sus propias obreras: captura termitas y las adopta como esclavas. Cada cierto tiempo una termita cercana se convierte en obrera de tu colonia.',
+        traits: ['Captura de esclavas', 'Obreras adoptivas', 'Nido subterráneo', 'Mandíbulas afiladas'],
+        nestStyle: 'classic',
+        queenHp: 410, queenDamage: 2.7, queenSpeed: 2.75,
+        workerHp: 34, workerDamage: 1.2, workerSpeed: 2.4, workerScale: 1.0,
+        venom: false, workerCharge: false, slaveRaid: true
+    },
+    formica: {
+        key: 'formica',
+        name: 'Formica rufa',
+        family: 'Formica',
+        title: 'Hormiga roja del bosque',
+        blurb: 'Construye grandes montículos de agujas de pino y defiende el nido en grupos numerosos. Obreras rápidas, resistentes y con una mordida firme, ideales para sostener el frente.',
+        traits: ['Nido de montículo', 'Defensa en grupo', 'Mordida firme', 'Nido subterráneo'],
+        nestStyle: 'classic',
+        queenHp: 460, queenDamage: 2.9, queenSpeed: 2.75,
+        workerHp: 38, workerDamage: 1.05, workerSpeed: 2.35, workerScale: 1.05,
+        venom: false, workerCharge: false
     },
     generic: {
         key: 'generic',
@@ -1672,7 +1859,12 @@ const ANT_PALETTES = {
     myrmecia: { head: '#8f1d14', thorax: '#b03a1e', gaster: '#5c1009', leg: '#33100a', accent: '#ffd166', mandible: '#ffd166', sheen: '#e0704a' },
     crematogaster: { head: '#45190c', thorax: '#7a2f12', gaster: '#2e0f06', leg: '#20100a', accent: '#e9c46a', mandible: '#1a0a04', sheen: '#a34e35' },
     lasius: { head: '#7a4a1e', thorax: '#96602c', gaster: '#5e3816', leg: '#33200e', accent: '#ffd166', mandible: '#33200e', sheen: '#d09a55' },
-    colobopsis: { head: '#5c2a12', thorax: '#7c3a18', gaster: '#40200d', leg: '#2a1408', accent: '#d8f340', mandible: '#201008', sheen: '#b06a30' }
+    colobopsis: { head: '#5c2a12', thorax: '#7c3a18', gaster: '#40200d', leg: '#2a1408', accent: '#d8f340', mandible: '#201008', sheen: '#b06a30' },
+    solenopsis: { head: '#8b2f12', thorax: '#b34418', gaster: '#5e1e0b', leg: '#3a1207', accent: '#ff5a36', mandible: '#2a0d05', sheen: '#d8643a' },
+    oecophylla: { head: '#7f9b18', thorax: '#a6bf2c', gaster: '#63800f', leg: '#3f5210', accent: '#b5e48c', mandible: '#2d3a0b', sheen: '#d7e85c' },
+    dorylus: { head: '#2a1810', thorax: '#3d2414', gaster: '#1d1009', leg: '#140a05', accent: '#e07a5f', mandible: '#0d0704', sheen: '#6b4029' },
+    polyergus: { head: '#8c3a16', thorax: '#b35420', gaster: '#6b2410', leg: '#3d1608', accent: '#f4a261', mandible: '#2a0f06', sheen: '#d97b3c' },
+    formica: { head: '#7a2b12', thorax: '#a84a1c', gaster: '#4d180a', leg: '#2a0e06', accent: '#ff8c42', mandible: '#2a0e06', sheen: '#d96b34' }
 };
 
 let speciesKey = 'generic';
@@ -2089,7 +2281,12 @@ const ANT_FORMS = {
     myrmecia:      { gx:-6.4, grx:5.0, gry:3.0, bands:3, sting:1, heart:0, tx:-0.4, trx:3.0, try:2.2, spines:0, px:-1.9, hx:5.2, hrx:3.6, hry:3.2, head:'oval',   eye:1.35, mand:'strong', legK:1.15, legT:1.5, sw:3.8 },
     crematogaster: { gx:-5.6, grx:4.3, gry:2.6, bands:3, sting:1, heart:1, tx:-0.4, trx:2.5, try:1.9, spines:0, px:-1.7, hx:4.4, hrx:2.8, hry:2.5, head:'oval',   eye:0.8,  mand:'small',  legK:1,    legT:1.2, sw:3.4 },
     lasius:       { gx:-5.8, grx:4.5, gry:2.7, bands:3, sting:0, heart:0, tx:-0.4, trx:2.6, try:1.9, spines:0, px:-1.6, hx:4.5, hrx:2.9, hry:2.5, head:'oval',   eye:0.85, mand:'small',  legK:1,    legT:1.2, sw:3.3 },
-    colobopsis:   { gx:-5.9, grx:4.6, gry:2.8, bands:3, sting:0, heart:0, tx:-0.4, trx:2.6, try:1.9, spines:0, px:-1.7, hx:4.7, hrx:3.0, hry:2.6, head:'oval',   eye:0.85, mand:'small',  legK:1,    legT:1.2, sw:3.3 }
+    colobopsis:   { gx:-5.9, grx:4.6, gry:2.8, bands:3, sting:0, heart:0, tx:-0.4, trx:2.6, try:1.9, spines:0, px:-1.7, hx:4.7, hrx:3.0, hry:2.6, head:'oval',   eye:0.85, mand:'small',  legK:1,    legT:1.2, sw:3.3 },
+    solenopsis:   { gx:-5.7, grx:4.5, gry:2.7, bands:3, sting:1, heart:0, tx:-0.4, trx:2.6, try:1.9, spines:0, px:-1.6, hx:4.5, hrx:2.9, hry:2.5, head:'oval',   eye:0.9,  mand:'small',  legK:1,    legT:1.2, sw:3.3 },
+    oecophylla:   { gx:-5.8, grx:4.4, gry:2.6, bands:3, sting:0, heart:0, tx:-0.4, trx:2.6, try:1.8, spines:0, px:-1.6, hx:4.6, hrx:3.0, hry:2.5, head:'oval',   eye:1.0,  mand:'small',  legK:1.1,  legT:1.3, sw:3.4 },
+    dorylus:      { gx:-6.0, grx:4.4, gry:2.5, bands:3, sting:1, heart:0, tx:-0.5, trx:2.5, try:1.7, spines:0, px:-1.8, hx:4.8, hrx:2.8, hry:2.4, head:'oval',   eye:0.55, mand:'long',   legK:1.05, legT:1.2, sw:3.6 },
+    polyergus:    { gx:-5.9, grx:4.6, gry:2.7, bands:3, sting:0, heart:0, tx:-0.4, trx:2.6, try:1.9, spines:0, px:-1.7, hx:4.9, hrx:3.2, hry:2.7, head:'oval',   eye:0.85, mand:'long',   legK:1,    legT:1.2, sw:3.5 },
+    formica:      { gx:-6.0, grx:4.7, gry:2.9, bands:3, sting:0, heart:0, tx:-0.5, trx:2.7, try:2.0, spines:0, px:-1.7, hx:4.8, hrx:3.2, hry:2.8, head:'oval',   eye:0.9,  mand:'strong', legK:1.05, legT:1.3, sw:3.4 }
 };
 
 /* Segmento de quitina con volumen: degradado radial suave (sin pixelado). */
@@ -2417,6 +2614,10 @@ function drawSpeciesPortrait(cnv, key) {
         : key === 'atta' ? '#3a2413'
         : key === 'lasius' ? '#2b3a16'
         : key === 'colobopsis' ? '#3a3410'
+        : key === 'solenopsis' ? '#3d160c'
+        : key === 'oecophylla' ? '#24340f'
+        : key === 'dorylus' ? '#1e130c'
+        : key === 'polyergus' ? '#3a2110'
         : '#2e2414');
     bg.addColorStop(1, '#0d170a');
     c.fillStyle = bg;
@@ -2529,6 +2730,35 @@ function drawSpeciesPortrait(cnv, key) {
             c.beginPath();
             c.ellipse(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr * TILT, 6 + (i % 3) * 3, 3 + (i % 2) * 2, a, 0, Math.PI * 2);
             c.fill();
+        }
+    } else if (key === 'solenopsis' || key === 'oecophylla' || key === 'dorylus' || key === 'polyergus') {
+        const cx = w * 0.5, cy = h * 0.54;
+        const col = key === 'oecophylla' ? '#b5e48c' : key === 'solenopsis' ? '#ff5a36' : key === 'dorylus' ? '#e07a5f' : '#f4a261';
+        const glow = c.createRadialGradient(cx, cy, 4, cx, cy, w * 0.36);
+        glow.addColorStop(0, key === 'oecophylla' ? 'rgba(181,228,140,0.42)' : 'rgba(255,140,80,0.36)');
+        glow.addColorStop(0.6, 'rgba(120,80,30,0.12)');
+        glow.addColorStop(1, 'rgba(0,0,0,0)');
+        c.fillStyle = glow;
+        c.fillRect(0, 0, w, h);
+        for (let i = 0; i < 12; i++) {
+            const a = i / 12 * Math.PI * 2;
+            const rr = 45 + (i % 3) * 15;
+            c.fillStyle = col;
+            c.globalAlpha = 0.22;
+            c.beginPath();
+            c.ellipse(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr * TILT, 7 + (i % 2) * 4, 3.5, a, 0, Math.PI * 2);
+            c.fill();
+        }
+        c.globalAlpha = 1;
+        if (key === 'oecophylla') {
+            c.strokeStyle = 'rgba(181,228,140,0.5)';
+            c.lineWidth = 2;
+            for (let i = 0; i < 4; i++) {
+                c.beginPath();
+                c.moveTo(cx - 60 + i * 34, h * 0.82);
+                c.quadraticCurveTo(cx - 40 + i * 34, h * 0.58, cx - 20 + i * 34, h * 0.78);
+                c.stroke();
+            }
         }
     } else if (key === 'atta') {
         c.fillStyle = '#4a2c14';
@@ -2842,11 +3072,9 @@ class Ant extends Entity {
         this.maxHp = sp.workerHp;
         this.damage = sp.workerDamage;
         this.scale = sp.workerScale;
-        if (sp.fungus) {
-            this.maxHp = Math.round(this.maxHp * 1.3);
-            this.hp = this.maxHp;
-            this.damage *= 1.35;
-        }
+        if (sp.swarm) this.damage *= 1.08;
+        if (sp.nomadic) { this.speed *= 1.2; this.damage *= 1.12; }
+        if (sp.leafNest) { this.maxHp = Math.round(this.maxHp * 1.15); this.hp = this.maxHp; }
         this.hasFood = false;
         this.carriesLeaf = false;
         this.slowTimer = 0;
@@ -2875,7 +3103,7 @@ class Ant extends Entity {
         this.poison = 0;
         this.poisonDmg = 0.05;
         this.wave = false;
-        this.caste = caste === 'major' ? 'major' : 'worker';
+        this.caste = caste === 'major' ? 'major' : caste === 'soldier' ? 'soldier' : 'worker';
         this.raidAssigned = false;
         this.ugJob = null;
         if (this.caste === 'major') {
@@ -2883,7 +3111,14 @@ class Ant extends Entity {
             this.hp = this.maxHp;
             this.damage *= 2.2;
             this.speed *= 0.88;
+        } else if (this.caste === 'soldier') {
+            this.maxHp = Math.round(this.maxHp * 2.8);
+            this.hp = this.maxHp;
+            this.damage *= 2.9;
+            this.speed *= 0.92;
+            this.scale *= 1.18;
         }
+        this.fungusPct = 0;
         applyLevelStats(this, this.caste);
         if (PROG.honeyBuff > 0 || PROG.sugarBuff > 0) {
             const m = activeBuff();
@@ -2891,6 +3126,8 @@ class Ant extends Entity {
             this.speed *= m.spd;
             this.buffMul = m;
         }
+        applyResearchToAnt(this);
+        applyFungusBonusToAnt(this);
     }
 
     tryEscapeJump() {
@@ -3162,10 +3399,7 @@ class Ant extends Entity {
                     col.food += 1;
                     growNest(this.nest, 2);
                     this.hp = Math.min(this.maxHp, this.hp + 4);
-                    if (this.nest.style === 'fungus' && this.nest.hunger != null) {
-                        this.nest.hunger = Math.min(100, this.nest.hunger + 9);
-                        this.nest.hp = Math.min(this.nest.maxHp, this.nest.hp + 3);
-                    }
+                    if (sp.fungus) fungusHunger = Math.min(100, fungusHunger + 9);
                     if (col.side === pvp.side) {
                         if (col.food >= EGG_COST && pvpOwnEggs(this.nest) < PVP_EGG_MAX && layEgg(this.nest)) {
                             spawnHitParticles(this.nest.x, this.nest.y, '#ffd166', 10);
@@ -3176,10 +3410,7 @@ class Ant extends Entity {
                     moveEntitySmooth(this, currentSpeed, 4);
                     return;
                 }
-                if (this.nest.style === 'fungus') {
-                    this.nest.hunger = Math.min(100, (this.nest.hunger ?? 100) + 9);
-                    this.nest.hp = Math.min(this.nest.maxHp, this.nest.hp + 3);
-                }
+                if (sp.fungus) fungusHunger = Math.min(100, fungusHunger + 9);
                 addFood(this.carriesLeaf ? 1 : 1, this.foodType || 'berry');
                 growNest(this.nest, 2);
                 if (gameMode === 'sandbox') {
@@ -3927,7 +4158,10 @@ const ENEMY_STATS = {
     tiger:     { speed: 3.35, radius: 17, hp: 135, damage: 10.5, melee: 24, sight: 380, drop: 25 },
     wasp:      { speed: 3.9,  radius: 13, hp: 58,  damage: 14.25, melee: 24, sight: 360, drop: 28 },
     assassin:  { speed: 2.6,  radius: 15, hp: 150, damage: 11,   melee: 30, sight: 330, drop: 26 },
-    anteater:  { speed: 1.35, radius: 30, hp: 850, damage: 18,   melee: 45, sight: 560, drop: 90 }
+    anteater:  { speed: 1.35, radius: 30, hp: 850, damage: 18,   melee: 45, sight: 560, drop: 90 },
+    rhino:     { speed: 1.75, radius: 28, hp: 720, damage: 16,   melee: 38, sight: 420, drop: 80, miniBoss: true },
+    hornet:    { speed: 4.1,  radius: 15, hp: 300, damage: 18.5, melee: 22, sight: 430, drop: 50, miniBoss: true },
+    lizard:    { speed: 2.9,  radius: 24, hp: 640, damage: 15,   melee: 30, sight: 460, drop: 75, miniBoss: true }
 };
 
 /* Pulgones simbióticos: viven en las ramas, sueltan miel poco a poco y son
@@ -4047,6 +4281,68 @@ class Aphid {
     }
 }
 
+/* Helpers de dibujo para enemigos: trazos, ojos, alas y cerdas con volumen. */
+function mobStroke(c, pts, color, width, close = false) {
+    c.strokeStyle = color;
+    c.lineWidth = width;
+    c.lineCap = 'round';
+    c.lineJoin = 'round';
+    c.beginPath();
+    c.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i < pts.length; i++) c.lineTo(pts[i][0], pts[i][1]);
+    if (close) c.closePath();
+    c.stroke();
+}
+function mobEllipse(c, x, y, rx, ry, fill, rot = 0, stroke = null, lw = 1) {
+    c.fillStyle = fill;
+    c.beginPath();
+    c.ellipse(x, y, Math.max(0.1, rx), Math.max(0.1, ry), rot, 0, Math.PI * 2);
+    c.fill();
+    if (stroke) { c.strokeStyle = stroke; c.lineWidth = lw; c.stroke(); }
+}
+function mobEye(c, x, y, r, iris = '#c8a02a') {
+    mobEllipse(c, x, y, r, r, '#f5edcf');
+    mobEllipse(c, x, y, r * 0.66, r * 0.66, iris);
+    mobEllipse(c, x, y, r * 0.32, r * 0.32, '#0b0705');
+    c.fillStyle = 'rgba(255,255,255,0.8)';
+    c.beginPath();
+    c.arc(x - r * 0.3, y - r * 0.32, Math.max(0.35, r * 0.16), 0, Math.PI * 2);
+    c.fill();
+}
+function mobWing(c, x, y, rx, ry, rot, fill, stroke) {
+    c.save();
+    c.fillStyle = fill || 'rgba(228,242,255,0.34)';
+    c.strokeStyle = stroke || 'rgba(120,155,185,0.55)';
+    c.lineWidth = 0.7;
+    c.beginPath();
+    c.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+    c.beginPath();
+    c.moveTo(x - rx * 0.85, y);
+    c.quadraticCurveTo(x, y - ry * 0.35, x + rx * 0.85, y);
+    c.moveTo(x - rx * 0.35, y - ry * 0.55);
+    c.lineTo(x + rx * 0.25, y + ry * 0.55);
+    c.moveTo(x - rx * 0.2, y + ry * 0.55);
+    c.lineTo(x + rx * 0.45, y - ry * 0.45);
+    c.stroke();
+    c.restore();
+}
+function mobHairs(c, x, y, rx, ry, color, count = 12, len = 3) {
+    c.strokeStyle = color;
+    c.lineWidth = 0.7;
+    c.lineCap = 'round';
+    for (let i = 0; i < count; i++) {
+        const a = (i / count) * Math.PI * 2;
+        const hx = x + Math.cos(a) * rx * 0.94;
+        const hy = y + Math.sin(a) * ry * 0.94;
+        c.beginPath();
+        c.moveTo(hx, hy);
+        c.lineTo(hx + Math.cos(a) * len, hy + Math.sin(a) * len);
+        c.stroke();
+    }
+}
+
 class Enemy extends Entity {
     constructor(x, y, type) {
         super(x, y);
@@ -4084,6 +4380,7 @@ class Enemy extends Entity {
         this.tongueEnd = null;
         this.isAnt = false;
         this.isMiniBoss = !!st.miniBoss;
+        this.phase = 1;
     }
 
     update() {
@@ -4102,6 +4399,13 @@ class Enemy extends Entity {
             }
         }
         this.walkCycle += this.speed * 0.25;
+        if (this.isMiniBoss && this.phase === 1 && this.hp < this.maxHp * 0.5) {
+            this.phase = 2;
+            this.speed *= 1.25;
+            this.damage *= 1.3;
+            spawnHitParticles(this.x, this.y, '#ff758f', 18);
+            setStatus(`¡${this.type === 'mantis' ? 'La mantis' : this.type === 'anteater' ? 'El oso hormiguero' : 'El jefe'} entra en fase 2: más rápido y más letal!`, true);
+        }
 
         if (this.trapTarget && (this.trapTarget.hp <= 0 || !ants.includes(this.trapTarget))) {
             this.trapTarget = null;
@@ -4313,7 +4617,6 @@ class Enemy extends Entity {
             ctx.ellipse(0, 0, this.radius * 1.15, this.radius * 1.15 * TILT, 0, 0, Math.PI * 2);
             ctx.stroke();
         }
-
         if (this.slowTimer > 0) {
             ctx.strokeStyle = 'rgba(199, 125, 255, 0.6)';
             ctx.lineWidth = 1.6;
@@ -4327,7 +4630,11 @@ class Enemy extends Entity {
         const barWidth = this.radius * 2.2;
         ctx.fillStyle = 'rgba(0,0,0,0.65)';
         ctx.fillRect(-barWidth / 2, -this.radius - 16, barWidth, 4.5);
-        const barColors = { mantis: '#ffbe0b', antlion: '#f4a261', scorpion: '#e5383b', centipede: '#e76f51', wasp: '#ffd166', assassin: '#c77dff', anteater: '#b08968', tiger: '#4cc9f0' };
+        const barColors = {
+            spider: '#e76f51', mantis: '#8ac926', antlion: '#e9c46a', scorpion: '#e5383b',
+            centipede: '#f4a261', tiger: '#4cc9f0', wasp: '#ffd166', assassin: '#c77dff',
+            anteater: '#b08968', rhino: '#adb5bd', hornet: '#ff9f1c', lizard: '#80ed99'
+        };
         ctx.fillStyle = barColors[this.type] || '#ff4d6d';
         ctx.fillRect(-barWidth / 2, -this.radius - 16, barWidth * Math.max(0, this.hp / this.maxHp), 4.5);
 
@@ -4359,303 +4666,316 @@ class Enemy extends Entity {
         ctx.scale(1, TILT);
         ctx.rotate(this.angle);
 
-        if (this.type === 'mantis') {
-            const swing = Math.sin(this.walkCycle) * 3;
-            ctx.strokeStyle = '#1b4332';
+        if (this.type === 'spider') {
+            const sw = Math.sin(this.walkCycle) * 3.2;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            /* Cuatro patas traseras articuladas. */
             for (const s of [-1, 1]) {
-                ctx.lineWidth = 2.4;
+                for (let i = 0; i < 4; i++) {
+                    const ax = 8 - i * 4.6;
+                    const phase = (i % 2 === 0 ? 1 : -1) * s;
+                    const kx = ax - 7 + i * 1.8 + sw * phase;
+                    const tx = kx - 8 - i * 0.8 + sw * phase * 0.4;
+                    const fx = tx - 4 - i * 0.4;
+                    mobStroke(ctx, [[ax, s * 3], [kx, s * 10], [tx, s * 17], [fx, s * 21]], '#2a170c', 2.4 - i * 0.15);
+                    mobStroke(ctx, [[kx, s * 10], [tx, s * 17]], '#5a3519', 1.1 - i * 0.08);
+                }
+            }
+            for (const s of [-1, 1]) mobStroke(ctx, [[11, s * 2], [16, s * 5], [19, s * 4]], '#4a2a14', 2.2);
+            antOval(ctx, -8, 0, 11.5, 8.8, '#4a2c17', 0, 1.5, 0.42);
+            ctx.save();
+            ctx.beginPath();
+            ctx.ellipse(-8, 0, 11, 8.3, 0, 0, Math.PI * 2);
+            ctx.clip();
+            ctx.strokeStyle = 'rgba(28,14,6,0.55)';
+            ctx.lineWidth = 2.2;
+            for (let i = 0; i < 4; i++) {
+                const y = -6 + i * 4;
                 ctx.beginPath();
-                ctx.moveTo(-8, s * 5); ctx.lineTo(-14 + swing * s, s * 11); ctx.lineTo(-18 + swing * s, s * 19);
-                ctx.moveTo(0, s * 5); ctx.lineTo(-3 - swing * s, s * 11); ctx.lineTo(-2 - swing * s, s * 19);
+                ctx.moveTo(-19, y);
+                ctx.quadraticCurveTo(-8, y - 1.6, 3, y);
                 ctx.stroke();
             }
-            /* Patas raptoras plegadas con espinas internas. */
+            ctx.fillStyle = 'rgba(220,190,140,0.16)';
+            ctx.fillRect(-20, -9, 24, 3);
+            ctx.restore();
+            mobHairs(ctx, -8, 0, 11.5, 8.8, 'rgba(60,35,16,0.75)', 16, 3);
+            for (const s of [-1, 1]) mobEllipse(ctx, -18.5, s * 2.6, 2.2, 1.4, '#2a160b', s * 0.3);
+            antOval(ctx, 5, 0, 7.8, 6.3, '#5c3820', 0, 1.5, 0.42);
+            mobHairs(ctx, 5, 0, 7.8, 6.3, 'rgba(70,40,18,0.7)', 12, 2.4);
+            const eyes = [[8, -2.7, 1.5], [8, 2.7, 1.5], [10.5, -1.5, 1], [10.5, 1.5, 1], [12, -0.6, 0.8], [12, 0.6, 0.8], [6, -3.6, 0.9], [6, 3.6, 0.9]];
+            for (const e of eyes) mobEye(ctx, e[0], e[1], e[2], '#7a1f12');
             for (const s of [-1, 1]) {
-                ctx.strokeStyle = '#2d6a4f';
-                ctx.lineWidth = 4;
+                antOval(ctx, 10.5, s * 2.6, 2.3, 1.9, '#3a1e0e');
+                mobStroke(ctx, [[11, s * 2.6], [14, s * 4.8], [16.5, s * 3.2]], '#1b0d06', 2.1);
+            }
+        } else if (this.type === 'mantis') {
+            const sw = Math.sin(this.walkCycle) * 3.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            for (const s of [-1, 1]) {
+                for (let i = 0; i < 2; i++) {
+                    const bx = -4 - i * 7;
+                    mobStroke(ctx, [[bx, s * 4], [bx - 6 + sw * s, s * 11], [bx - 11 + sw * s, s * 20]], '#1b4332', 2.3);
+                    mobStroke(ctx, [[bx - 11 + sw * s, s * 20], [bx - 14 + sw * s, s * 23]], '#1b4332', 1.2);
+                }
+                for (let i = 0; i < 2; i++) {
+                    const bx = 2 + i * 4;
+                    mobStroke(ctx, [[bx, s * 4], [bx - 2 - sw * s, s * 11], [bx - 6 - sw * s, s * 19]], '#2d6a4f', 2.1);
+                    mobStroke(ctx, [[bx - 6 - sw * s, s * 19], [bx - 9 - sw * s, s * 22]], '#2d6a4f', 1.1);
+                }
+            }
+            antOval(ctx, -10, 0, 16.5, 7.6, '#2d6a4f', 0, 1.5, 0.45);
+            ctx.save();
+            ctx.beginPath();
+            ctx.ellipse(-10, 0, 15.5, 6.8, 0, 0, Math.PI * 2);
+            ctx.clip();
+            ctx.strokeStyle = 'rgba(12,45,25,0.55)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 6; i++) {
+                const x = -3 - i * 5;
                 ctx.beginPath();
-                ctx.moveTo(9, s * 3); ctx.lineTo(21, s * 10); ctx.lineTo(15, s * 5);
+                ctx.moveTo(x, -6);
+                ctx.quadraticCurveTo(x - 1.5, 0, x, 6);
                 ctx.stroke();
+            }
+            ctx.restore();
+            const flap = 0.35 + 0.25 * Math.abs(Math.sin(this.walkCycle * 1.6));
+            mobWing(ctx, -9, -3.2, 14, 2.6 + flap, -0.13, 'rgba(190,240,190,0.26)', 'rgba(30,80,45,0.5)');
+            mobWing(ctx, -9, 3.2, 14, 2.6 + flap, 0.13, 'rgba(190,240,190,0.26)', 'rgba(30,80,45,0.5)');
+            antOval(ctx, 7, 0, 7.2, 3.4, '#40916c', 0, 1.55, 0.45);
+            mobStroke(ctx, [[13, -1.5], [18, -2.5]], 'rgba(190,240,190,0.5)', 0.9);
+            for (const s of [-1, 1]) {
+                mobStroke(ctx, [[9, s * 2], [18, s * 8], [25, s * 7], [19, s * 3]], '#2d6a4f', 3.4);
+                mobStroke(ctx, [[18, s * 8], [25, s * 7]], '#74c69d', 1.3);
                 ctx.strokeStyle = '#1b4332';
-                ctx.lineWidth = 1;
-                for (let i = 0; i < 4; i++) {
-                    const t = i / 4;
-                    const bx = 9 + 12 * t;
-                    const by = s * (3 + 7 * t);
+                ctx.lineWidth = 0.9;
+                for (let i = 0; i < 5; i++) {
+                    const t = i / 5;
+                    const x = 18 + 7 * t;
+                    const y = s * (8 - t);
                     ctx.beginPath();
-                    ctx.moveTo(bx, by); ctx.lineTo(bx - 1, by + s * 2.6);
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x - 0.8, y + s * 2.6);
                     ctx.stroke();
                 }
             }
-            /* Abdomen segmentado y alas translúcidas. */
-            antOval(ctx, -9, 0, 17, 7.6, '#2d6a4f', 0.05, 1.5, 0.5);
-            ctx.strokeStyle = 'rgba(10,40,25,0.5)';
-            ctx.lineWidth = 0.9;
-            for (let i = 0; i < 5; i++) {
-                const x = -4 - i * 5.2;
-                ctx.beginPath();
-                ctx.moveTo(x, -5.4); ctx.quadraticCurveTo(x - 1, 0, x, 5.4);
-                ctx.stroke();
-            }
-            ctx.fillStyle = 'rgba(190,240,190,0.26)';
-            ctx.beginPath();
-            ctx.ellipse(-8, -3, 14, 4, -0.16, 0, Math.PI * 2);
-            ctx.ellipse(-8, 3, 14, 4, 0.16, 0, Math.PI * 2);
-            ctx.fill();
-            /* Protórax alargado y cabeza triangular con ojos compuestos. */
-            antOval(ctx, 8, 0, 6.5, 3.6, '#40916c', 0, 1.5, 0.5);
             ctx.fillStyle = '#74c69d';
             ctx.beginPath();
-            ctx.moveTo(14, -4.5); ctx.lineTo(24, 0); ctx.lineTo(14, 4.5);
-            ctx.closePath();
+            ctx.moveTo(14, -5);
+            ctx.lineTo(25, 0);
+            ctx.lineTo(14, 5);
+            ctx.quadraticCurveTo(12, 0, 14, -5);
             ctx.fill();
-            for (const s of [-1, 1]) {
-                ctx.fillStyle = '#ffb703';
-                ctx.beginPath(); ctx.arc(21, s * 3.3, 2.7, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = '#1b4332';
-                ctx.beginPath(); ctx.arc(21.4, s * 3.3, 1, 0, Math.PI * 2); ctx.fill();
-            }
-            ctx.strokeStyle = '#1b4332';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(19, -2); ctx.quadraticCurveTo(27, -6, 29, -3);
-            ctx.moveTo(19, 2); ctx.quadraticCurveTo(27, 6, 29, 3);
-            ctx.stroke();
+            mobEye(ctx, 21, -3.3, 2.9, '#ffb703');
+            mobEye(ctx, 21, 3.3, 2.9, '#ffb703');
+            mobStroke(ctx, [[18, -2], [27, -6], [32, -4]], '#1b4332', 1.1);
+            mobStroke(ctx, [[18, 2], [27, 6], [32, 4]], '#1b4332', 1.1);
         } else if (this.type === 'antlion') {
-            const sw = Math.sin(this.walkCycle) * 3;
-            ctx.strokeStyle = '#6b4b2a';
+            const sw = Math.sin(this.walkCycle) * 3.2;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
             for (const s of [-1, 1]) {
                 for (let i = 0; i < 3; i++) {
-                    const bx = -8 + i * 7;
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.moveTo(bx, s * 7);
-                    ctx.lineTo(bx - 1 + sw * s, s * 13);
-                    ctx.lineTo(bx - 3 + sw * s, s * 18);
-                    ctx.stroke();
+                    const bx = -6 + i * 7;
+                    mobStroke(ctx, [[bx, s * 6], [bx - 2 + sw * s, s * 13], [bx - 5 + sw * s, s * 18]], '#6b4b2a', 2);
                 }
             }
-            /* Abdomen larvario abultado con tergitos y cerdas. */
-            antOval(ctx, -8, 0, 16, 11.5, '#c9ae7f', 0, 1.4, 0.55);
-            ctx.strokeStyle = 'rgba(90, 66, 38, 0.5)';
-            ctx.lineWidth = 1.2;
-            for (let i = 0; i < 5; i++) {
-                const x = -2 - i * 4.6;
+            for (let i = 0; i < 6; i++) {
+                antOval(ctx, -4 - i * 4.2, 0, 7.2 - i * 0.5, 8.6 - i * 0.5, i % 2 ? '#c9ae7f' : '#b99a6b', 0, 1.5, 0.5);
+                ctx.strokeStyle = 'rgba(80,55,28,0.4)';
+                ctx.lineWidth = 0.8;
                 ctx.beginPath();
-                ctx.moveTo(x, -8); ctx.quadraticCurveTo(x - 1.6, 0, x, 8);
+                ctx.moveTo(-0.5 - i * 4.2, -7);
+                ctx.quadraticCurveTo(-2 - i * 4.2, 0, -0.5 - i * 4.2, 7);
                 ctx.stroke();
             }
-            ctx.lineWidth = 1;
             for (const s of [-1, 1]) {
-                for (let i = 0; i < 6; i++) {
-                    const x = 3 - i * 4;
+                for (let i = 0; i < 7; i++) {
+                    const x = 2 - i * 4.6;
+                    ctx.strokeStyle = 'rgba(90,66,38,0.65)';
+                    ctx.lineWidth = 1;
                     ctx.beginPath();
-                    ctx.moveTo(x, s * 8); ctx.lineTo(x - 2, s * 12);
+                    ctx.moveTo(x, s * 7);
+                    ctx.lineTo(x - 2, s * 11);
                     ctx.stroke();
                 }
             }
-            /* Cabeza con ojos y enormes mandíbulas en hoz dentadas. */
-            antOval(ctx, 8.5, 0, 9, 7.6, '#a98b5c', 0, 1.4, 0.55);
-            ctx.fillStyle = '#2b1a0c';
-            ctx.beginPath();
-            ctx.arc(12, -3.4, 1.9, 0, Math.PI * 2);
-            ctx.arc(12, 3.4, 1.9, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#3d2b18';
-            ctx.lineWidth = 3.6;
-            ctx.beginPath();
-            ctx.moveTo(15, -3.4); ctx.quadraticCurveTo(25, -8.5, 32, -2.5);
-            ctx.moveTo(15, 3.4); ctx.quadraticCurveTo(25, 8.5, 32, 2.5);
-            ctx.stroke();
-            ctx.lineWidth = 1.2;
+            antOval(ctx, 8.5, 0, 9.2, 7.6, '#a98b5c', 0, 1.5, 0.45);
+            mobEye(ctx, 12, -3.4, 1.8, '#2b1a0c');
+            mobEye(ctx, 12, 3.4, 1.8, '#2b1a0c');
             for (const s of [-1, 1]) {
-                for (let i = 0; i < 3; i++) {
-                    const t = 0.35 + i * 0.2;
-                    const x = 15 + 17 * t;
-                    const y = s * (3.4 + 3.2 * Math.sin(t * Math.PI));
+                ctx.strokeStyle = '#3d2b18';
+                ctx.lineWidth = 4.2;
+                ctx.beginPath();
+                ctx.moveTo(15, s * 3.2);
+                ctx.quadraticCurveTo(26, s * 9, 33, s * 2.4);
+                ctx.stroke();
+                ctx.strokeStyle = '#c9ae7f';
+                ctx.lineWidth = 1.2;
+                for (let i = 0; i < 4; i++) {
+                    const t = 0.3 + i * 0.18;
+                    const x = 15 + 18 * t;
+                    const y = s * (3.2 + 4.2 * Math.sin(t * Math.PI));
                     ctx.beginPath();
-                    ctx.moveTo(x, y); ctx.lineTo(x + 1, y - s * 2.2);
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x + 1, y - s * 2.4);
                     ctx.stroke();
                 }
             }
         } else if (this.type === 'scorpion') {
             const sw = Math.sin(this.walkCycle) * 3;
-            ctx.strokeStyle = '#4a1414';
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
             for (const s of [-1, 1]) {
                 for (let i = 0; i < 4; i++) {
                     const bx = -10 + i * 6;
-                    ctx.lineWidth = 2.1;
+                    mobStroke(ctx, [[bx, s * 4.5], [bx - 3 + sw * s, s * 11], [bx - 6 + sw * s, s * 17]], '#4a1414', 2);
+                }
+            }
+            antOval(ctx, -8, 0, 8.8, 6.8, '#6a1f1f', 0, 1.5, 0.45);
+            for (let i = 0; i < 4; i++) antOval(ctx, -1.5 - i * 4.4, 0, 4.2 - i * 0.35, 5.2 - i * 0.35, i % 2 ? '#8c2f2f' : '#7a2727', 0, 1.45, 0.5);
+            for (const s of [-1, 1]) {
+                for (let i = 0; i < 4; i++) {
+                    ctx.strokeStyle = 'rgba(230,180,140,0.5)';
+                    ctx.lineWidth = 0.8;
                     ctx.beginPath();
-                    ctx.moveTo(bx, s * 4.5);
-                    ctx.lineTo(bx - 3 + sw * s, s * 11);
-                    ctx.lineTo(bx - 5 + sw * s, s * 17);
+                    ctx.moveTo(-4, s * 2);
+                    ctx.lineTo(-8 - i * 2, s * 5 + i);
                     ctx.stroke();
                 }
             }
-            /* Prosoma y mesosoma segmentados. */
-            antOval(ctx, -8, 0, 8.5, 6.8, '#6a1f1f', 0, 1.4, 0.5);
-            for (let i = 0; i < 4; i++) {
-                antOval(ctx, -1.5 - i * 4.4, 0, 4.2 - i * 0.35, 5.3 - i * 0.4, '#8c2f2f', 0, 1.4, 0.55);
+            const tail = [[-14, -3], [-20, -9], [-23, -17], [-18, -24], [-9, -27], [-1, -23]];
+            for (let i = 0; i < tail.length; i++) {
+                const pt = tail[i];
+                antOval(ctx, pt[0], pt[1], 4.2 - i * 0.28, 3.6 - i * 0.2, '#7f1d1d', 0, 1.5, 0.45);
             }
-            /* Cola con segmentos que se curva sobre el dorso y remata en aguijón. */
-            const segs = [[-14, -4], [-20, -10], [-23, -18], [-18, -24], [-9, -25], [-2, -21]];
-            ctx.strokeStyle = '#7f1d1d';
-            ctx.lineWidth = 6;
-            ctx.beginPath();
-            ctx.moveTo(-13, -2);
-            for (const pt of segs) ctx.lineTo(pt[0], pt[1]);
-            ctx.stroke();
-            ctx.strokeStyle = 'rgba(255,180,120,0.22)';
-            ctx.lineWidth = 2;
-            ctx.stroke();
+            mobEllipse(ctx, 0, -21, 3.2, 2.6, '#b13030');
             ctx.fillStyle = '#ffd166';
             ctx.beginPath();
-            ctx.moveTo(-2, -21); ctx.lineTo(3, -19); ctx.lineTo(-2, -17);
+            ctx.moveTo(1, -22);
+            ctx.lineTo(6, -20);
+            ctx.lineTo(0, -17);
             ctx.closePath();
             ctx.fill();
-            /* Quelíceros con pinzas dentadas. */
-            ctx.strokeStyle = '#6a1f1f';
-            ctx.lineWidth = 3.2;
-            ctx.beginPath();
-            ctx.moveTo(6, -4); ctx.lineTo(13, -9);
-            ctx.moveTo(6, 4); ctx.lineTo(13, 9);
-            ctx.stroke();
             for (const s of [-1, 1]) {
-                antOval(ctx, 16, s * 9, 5, 3.8, '#8c2f2f', s * 0.3, 1.4, 0.55);
-                ctx.strokeStyle = '#4a1414';
-                ctx.lineWidth = 1.8;
-                ctx.beginPath();
-                ctx.moveTo(19, s * 10.6); ctx.lineTo(24, s * 8.4);
-                ctx.moveTo(19, s * 7.4); ctx.lineTo(24, s * 9.6);
-                ctx.stroke();
+                mobStroke(ctx, [[6, s * 4], [12, s * 9], [16, s * 10]], '#6a1f1f', 3.2);
+                antOval(ctx, 18, s * 10, 5.2, 3.4, '#8c2f2f', s * 0.25, 1.5, 0.5);
+                mobStroke(ctx, [[21, s * 11.4], [26, s * 8.6]], '#4a1414', 2);
+                mobStroke(ctx, [[21, s * 8.6], [26, s * 10.6]], '#4a1414', 2);
             }
-            ctx.fillStyle = '#e9c46a';
-            ctx.beginPath();
-            ctx.arc(11, -3, 1.3, 0, Math.PI * 2);
-            ctx.arc(11, 3, 1.3, 0, Math.PI * 2);
-            ctx.fill();
+            mobEye(ctx, 11, -3, 1.3, '#e9c46a');
+            mobEye(ctx, 11, 3, 1.3, '#e9c46a');
+            mobEye(ctx, 9, -5, 0.8, '#e9c46a');
+            mobEye(ctx, 9, 5, 0.8, '#e9c46a');
         } else if (this.type === 'centipede') {
-            const sw = Math.sin(this.walkCycle) * 3.5;
+            const sw = Math.sin(this.walkCycle) * 4;
             ctx.lineCap = 'round';
-            for (let i = 0; i < 9; i++) {
-                const x = 14 - i * 4.6;
+            const segs = 12;
+            for (let i = segs - 1; i >= 0; i--) {
+                const x = 15 - i * 3.6;
                 for (const s of [-1, 1]) {
-                    ctx.strokeStyle = '#5c1f0d';
-                    ctx.lineWidth = 1.5;
-                    ctx.beginPath();
-                    ctx.moveTo(x, s * 2.5);
-                    ctx.lineTo(x - 2 + sw * s, s * 8);
-                    ctx.lineTo(x - 4 + sw * s, s * 12);
-                    ctx.stroke();
+                    const ph = i % 2 ? 1 : -1;
+                    mobStroke(ctx, [[x, s * 2.5], [x - 2 + sw * s * ph, s * 8], [x - 5 + sw * s * ph, s * 12]], '#5c1f0d', 1.4);
                 }
-                antOval(ctx, x, 0, 4.4, 3.5, i % 2 ? '#b23a1a' : '#8c2f14', 0, 1.5, 0.5);
-                ctx.strokeStyle = 'rgba(0,0,0,0.28)';
+                antOval(ctx, x, 0, 3.6, 3.2, i % 2 ? '#b23a1a' : '#8c2f14', 0, 1.5, 0.5);
+                ctx.strokeStyle = 'rgba(35,10,5,0.5)';
                 ctx.lineWidth = 0.7;
                 ctx.beginPath();
-                ctx.moveTo(x + 4, -2.4); ctx.quadraticCurveTo(x + 5, 0, x + 4, 2.4);
+                ctx.moveTo(x + 2.8, -2);
+                ctx.quadraticCurveTo(x + 3.8, 0, x + 2.8, 2);
                 ctx.stroke();
             }
-            antOval(ctx, 17, 0, 4.6, 4, '#e76f51', 0, 1.5, 0.5);
-            ctx.strokeStyle = '#4a1c0e';
-            ctx.lineWidth = 1.4;
-            ctx.beginPath();
-            ctx.moveTo(20, -2); ctx.quadraticCurveTo(28, -6, 31, -3);
-            ctx.moveTo(20, 2); ctx.quadraticCurveTo(28, 6, 31, 3);
-            ctx.moveTo(20, -2.5); ctx.lineTo(26, -5);
-            ctx.moveTo(20, 2.5); ctx.lineTo(26, 5);
-            ctx.stroke();
-            ctx.fillStyle = '#1b0d08';
-            ctx.beginPath();
-            ctx.arc(18.5, -1.8, 1.1, 0, Math.PI * 2);
-            ctx.arc(18.5, 1.8, 1.1, 0, Math.PI * 2);
-            ctx.fill();
-        } else if (this.type === 'wasp') {
-            const flap = 0.5 + 0.5 * Math.abs(Math.sin(this.walkCycle * 2.2));
-            /* Alas translúcidas con venas. */
-            ctx.fillStyle = `rgba(230, 245, 255, ${0.26 + flap * 0.16})`;
-            ctx.strokeStyle = 'rgba(120, 160, 190, 0.5)';
-            ctx.lineWidth = 0.7;
-            for (const s of [-1, 1]) {
-                ctx.beginPath();
-                ctx.ellipse(-4, s * 9, 12, 3.4 * flap + 1.2, s * 0.5, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.stroke();
-            }
-            ctx.strokeStyle = '#1b1b1b';
-            ctx.lineWidth = 1.1;
+            const lastX = 15 - (segs - 1) * 3.6;
+            for (const s of [-1, 1]) mobStroke(ctx, [[lastX, s * 2], [lastX - 6, s * 7], [lastX - 10, s * 10]], '#4a1c0e', 2);
+            antOval(ctx, 18, 0, 4.6, 4, '#e76f51', 0, 1.5, 0.5);
+            mobEye(ctx, 20, -1.9, 1.1, '#1b0d08');
+            mobEye(ctx, 20, 1.9, 1.1, '#1b0d08');
+            mobStroke(ctx, [[21, -2], [29, -6], [34, -5]], '#4a1c0e', 1.2);
+            mobStroke(ctx, [[21, 2], [29, 6], [34, 5]], '#4a1c0e', 1.2);
+            for (const s of [-1, 1]) mobStroke(ctx, [[21, s * 2], [26, s * 4], [29, s * 2]], '#3a1208', 2);
+        } else if (this.type === 'tiger') {
+            const sw = Math.sin(this.walkCycle * 1.7) * 5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
             for (const s of [-1, 1]) {
                 for (let i = 0; i < 3; i++) {
-                    const bx = -4 + i * 5;
-                    ctx.beginPath();
-                    ctx.moveTo(bx, s * 3);
-                    ctx.lineTo(bx - 1, s * 8);
-                    ctx.lineTo(bx - 3, s * 12);
-                    ctx.stroke();
+                    const bx = -8 + i * 8;
+                    mobStroke(ctx, [[bx, s * 5], [bx - 4 + sw * s, s * 12], [bx - 8 + sw * s, s * 18]], '#241a10', 2.2);
+                    mobStroke(ctx, [[bx - 8 + sw * s, s * 18], [bx - 10 + sw * s, s * 21]], '#241a10', 1.1);
                 }
             }
-            /* Gáster con bandas, pecíolo estrecho y aguijón. */
-            antOval(ctx, -11, 0, 9.5, 5.4, '#1b1b1b', 0, 1.5, 0.55);
+            antOval(ctx, -6, 0, 17, 9.5, '#7c4a12', 0, 1.6, 0.45);
+            ctx.save();
+            ctx.beginPath();
+            ctx.ellipse(-7, 0, 15, 8, 0, 0, Math.PI * 2);
+            ctx.clip();
+            antOval(ctx, -7, -4.2, 15, 4.4, '#a86b1c', 0, 1.6, 0.6);
+            antOval(ctx, -7, 4.2, 15, 4.4, '#96601a', 0, 1.6, 0.6);
+            ctx.fillStyle = '#f2e7c4';
+            ctx.beginPath();
+            ctx.ellipse(-15, -1.5, 2.4, 5.6, 0.25, 0, Math.PI * 2);
+            ctx.ellipse(-14, 3.2, 2.1, 3.4, -0.2, 0, Math.PI * 2);
+            ctx.ellipse(-6, 0, 2.2, 7, -0.2, 0, Math.PI * 2);
+            ctx.ellipse(2, -1, 1.8, 5.4, 0.15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            mobStroke(ctx, [[-22, 0], [9, 0]], '#3d2b18', 0.9);
+            antOval(ctx, 11, 0, 7, 6.2, '#3d2b18', 0, 1.5, 0.45);
+            mobEye(ctx, 16, -2.8, 1.9, '#f4f1de');
+            mobEye(ctx, 16, 2.8, 1.9, '#f4f1de');
+            mobStroke(ctx, [[15, -3], [20, -7], [24, -5]], '#3d2b18', 1.6);
+            mobStroke(ctx, [[15, 3], [20, 7], [24, 5]], '#3d2b18', 1.6);
+            for (const s of [-1, 1]) mobStroke(ctx, [[17, s * 3], [23, s * 5], [26, s * 2]], '#1b120b', 2.2);
+        } else if (this.type === 'wasp') {
+            const flap = 0.45 + 0.3 * Math.abs(Math.sin(this.walkCycle * 2.4));
+            ctx.lineCap = 'round';
+            for (const s of [-1, 1]) {
+                mobWing(ctx, -4, s * 9, 12, 3.4 * flap + 1.2, s * 0.45);
+                for (let i = 0; i < 3; i++) {
+                    const bx = -4 + i * 5;
+                    mobStroke(ctx, [[bx, s * 3], [bx - 1, s * 8], [bx - 4, s * 12]], '#1b1b1b', 1);
+                }
+            }
+            antOval(ctx, -11, 0, 9.5, 5.4, '#1b1b1b', 0, 1.5, 0.5);
             ctx.fillStyle = '#ffd166';
             ctx.beginPath();
-            for (let i = 0; i < 3; i++) {
-                ctx.ellipse(-15 + i * 3.6, 0, 1.9, 4.7 - i * 0.35, 0, 0, Math.PI * 2);
-            }
+            ctx.ellipse(-16, 0, 1.8, 4.6, 0, 0, Math.PI * 2);
+            ctx.ellipse(-12, 0, 2, 5, 0, 0, Math.PI * 2);
+            ctx.ellipse(-8, 0, 1.8, 4.4, 0, 0, Math.PI * 2);
             ctx.fill();
-            antOval(ctx, -2.5, 0, 1.7, 1.4, '#3d2b0f', 0, 1.4, 0.5);
+            antOval(ctx, -2.5, 0, 1.8, 1.5, '#3d2b0f', 0, 1.4, 0.5);
             antOval(ctx, 1, 0, 4.5, 3.8, '#3d2b0f', 0, 1.5, 0.5);
             antOval(ctx, 7, 0, 3.8, 3.4, '#ffd166', 0, 1.4, 0.6);
-            ctx.fillStyle = '#1b1b1b';
-            ctx.beginPath();
-            ctx.arc(8.4, -1.3, 1.1, 0, Math.PI * 2);
-            ctx.arc(8.4, 1.3, 1.1, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = '#1b1b1b';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(9, -2); ctx.quadraticCurveTo(14, -4.5, 15, -2);
-            ctx.moveTo(9, 2); ctx.quadraticCurveTo(14, 4.5, 15, 2);
-            ctx.moveTo(-19, 0); ctx.lineTo(-24, 0);
-            ctx.stroke();
+            mobEye(ctx, 8.4, -1.3, 1.2, '#1b1b1b');
+            mobEye(ctx, 8.4, 1.3, 1.2, '#1b1b1b');
+            mobStroke(ctx, [[9, -2], [14, -4.5], [16, -2]], '#1b1b1b', 1);
+            mobStroke(ctx, [[9, 2], [14, 4.5], [16, 2]], '#1b1b1b', 1);
+            mobStroke(ctx, [[-19, 0], [-25, 0]], '#1b1b1b', 1.2);
         } else if (this.type === 'assassin') {
             const sw = Math.sin(this.walkCycle) * 3;
-            ctx.strokeStyle = '#2b130a';
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
             for (const s of [-1, 1]) {
                 for (let i = 0; i < 3; i++) {
                     const bx = -8 + i * 7;
-                    ctx.lineWidth = 1.5;
-                    ctx.beginPath();
-                    ctx.moveTo(bx, s * 3.8);
-                    ctx.lineTo(bx - 1 + sw * s, s * 9);
-                    ctx.lineTo(bx + 1 + sw * s, s * 14);
-                    ctx.stroke();
+                    mobStroke(ctx, [[bx, s * 3.8], [bx - 1 + sw * s, s * 9], [bx + 1 + sw * s, s * 14]], '#2b130a', 1.5);
                 }
             }
-            /* Alas plegadas sobre el dorso. */
-            const flap = 0.5 + 0.5 * Math.abs(Math.sin(this.walkCycle * 2));
-            ctx.fillStyle = 'rgba(120, 60, 40, 0.45)';
-            ctx.beginPath();
-            ctx.ellipse(-6, -3, 13, 4.5 * flap + 1, -0.16, 0, Math.PI * 2);
-            ctx.ellipse(-6, 3, 13, 4.5 * flap + 1, 0.16, 0, Math.PI * 2);
-            ctx.fill();
-            antOval(ctx, -9, 0, 9.5, 5.4, '#7a1f0e', 0, 1.5, 0.5);
-            ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+            const flap = 0.4 + 0.25 * Math.abs(Math.sin(this.walkCycle * 2));
+            mobWing(ctx, -6, -3, 13, 4.5 * flap + 1, -0.16, 'rgba(120,60,40,0.5)', 'rgba(60,25,12,0.6)');
+            mobWing(ctx, -6, 3, 13, 4.5 * flap + 1, 0.16, 'rgba(120,60,40,0.5)', 'rgba(60,25,12,0.6)');
+            antOval(ctx, -9, 0, 9.5, 5.4, '#7a1f0e', 0, 1.5, 0.45);
+            ctx.strokeStyle = 'rgba(0,0,0,0.35)';
             ctx.lineWidth = 0.8;
             for (let i = 0; i < 4; i++) {
                 const x = -3 - i * 3.6;
                 ctx.beginPath();
-                ctx.moveTo(x, -4.4); ctx.quadraticCurveTo(x - 1, 0, x, 4.4);
+                ctx.moveTo(x, -4.4);
+                ctx.quadraticCurveTo(x - 1, 0, x, 4.4);
                 ctx.stroke();
             }
-            antOval(ctx, 2, 0, 6.6, 4.2, '#b23a1a', 0, 1.5, 0.5);
+            antOval(ctx, 2, 0, 6.6, 4.2, '#b23a1a', 0, 1.5, 0.45);
             ctx.fillStyle = '#e76f51';
             ctx.beginPath();
             ctx.moveTo(7, -3.6);
@@ -4663,157 +4983,203 @@ class Enemy extends Entity {
             ctx.quadraticCurveTo(13, 2.4, 7, 3.6);
             ctx.closePath();
             ctx.fill();
-            ctx.strokeStyle = '#1b0d08';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(13, 0); ctx.lineTo(22, 0);
-            ctx.stroke();
-            ctx.fillStyle = '#1b0d08';
-            ctx.beginPath();
-            ctx.arc(10, -2, 1, 0, Math.PI * 2);
-            ctx.arc(10, 2, 1, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = 'rgba(199, 125, 255, 0.7)';
+            mobEye(ctx, 10, -2, 1.1, '#1b0d08');
+            mobEye(ctx, 10, 2, 1.1, '#1b0d08');
+            mobStroke(ctx, [[14, 0], [19, 0]], '#1b0d08', 2.2);
+            mobStroke(ctx, [[19, 0], [23, 0]], '#3a160a', 1.8);
+            mobStroke(ctx, [[23, 0], [27, 0]], '#1b0d08', 1.3);
+            ctx.strokeStyle = 'rgba(199,125,255,0.7)';
             ctx.lineWidth = 1;
             ctx.beginPath();
-            ctx.arc(22, 0, 2.4, 0, Math.PI * 2);
+            ctx.arc(27, 0, 2.4, 0, Math.PI * 2);
             ctx.stroke();
         } else if (this.type === 'anteater') {
             const sw = Math.sin(this.walkCycle) * 3;
-            /* Cola peluda. */
+            ctx.lineCap = 'round';
             ctx.fillStyle = '#6b503a';
             ctx.beginPath();
-            ctx.moveTo(-14, -6);
-            ctx.bezierCurveTo(-40, -18, -52, -6, -50, 0);
-            ctx.bezierCurveTo(-52, 6, -40, 18, -14, 6);
+            ctx.moveTo(-14, -7);
+            ctx.bezierCurveTo(-42, -20, -56, -8, -54, 0);
+            ctx.bezierCurveTo(-56, 8, -42, 20, -14, 7);
             ctx.closePath();
             ctx.fill();
-            ctx.strokeStyle = 'rgba(60, 40, 25, 0.7)';
-            ctx.lineWidth = 1.2;
-            for (let i = 0; i < 8; i++) {
-                const t = i / 8;
-                const x = -18 - t * 28;
+            ctx.strokeStyle = 'rgba(45,28,16,0.75)';
+            ctx.lineWidth = 1.4;
+            for (let i = 0; i < 12; i++) {
+                const t = i / 12;
+                const x = -18 - t * 32;
                 ctx.beginPath();
-                ctx.moveTo(x, -7 - t * 6);
-                ctx.quadraticCurveTo(x - 8, 0, x, 7 + t * 6);
+                ctx.moveTo(x, -7 - t * 7);
+                ctx.quadraticCurveTo(x - 9, 0, x, 7 + t * 7);
                 ctx.stroke();
             }
-            /* Patas con garras grandes para abrir hormigueros. */
-            const paws = [[-14, 18], [-4, 20], [10, 17], [17, 15]];
-            ctx.strokeStyle = '#3a2a1c';
-            ctx.lineWidth = 4.5;
-            ctx.lineCap = 'round';
+            const paws = [[-14, 19], [-4, 21], [10, 18], [17, 16]];
             for (const p of paws) {
-                ctx.beginPath();
-                ctx.moveTo(p[0], p[1] * 0.45);
-                ctx.lineTo(p[0] + sw * 0.4, p[1]);
-                ctx.stroke();
+                mobStroke(ctx, [[p[0], p[1] * 0.45], [p[0] + sw * 0.4, p[1]]], '#3a2a1c', 5);
+                mobStroke(ctx, [[p[0] + sw * 0.4, p[1]], [p[0] + sw * 0.4 + 6, p[1] + 5]], '#f1e3c8', 2.6);
+                mobStroke(ctx, [[p[0] + sw * 0.4 + 3, p[1] + 3], [p[0] + sw * 0.4 + 7, p[1] + 1]], '#f1e3c8', 1.8);
             }
-            ctx.strokeStyle = '#f1e3c8';
-            ctx.lineWidth = 2.4;
-            for (const p of paws) {
-                ctx.beginPath();
-                ctx.moveTo(p[0] + sw * 0.4, p[1]);
-                ctx.lineTo(p[0] + sw * 0.4 + 5, p[1] + 4);
-                ctx.stroke();
-            }
-            /* Cuerpo con pelaje y franja dorsal. */
-            antOval(ctx, -4, 0, 24, 14, '#8d6e4f', 0, 1.4, 0.55);
+            antOval(ctx, -4, 0, 24, 14, '#8d6e4f', 0, 1.45, 0.5);
+            ctx.save();
+            ctx.beginPath();
+            ctx.ellipse(-5, 0, 22, 12.5, 0, 0, Math.PI * 2);
+            ctx.clip();
             ctx.fillStyle = '#2b2018';
             ctx.beginPath();
-            ctx.ellipse(-12, 0, 7, 13.2, 0.1, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = 'rgba(230, 210, 180, 0.28)';
-            ctx.lineWidth = 1;
-            for (let i = 0; i < 9; i++) {
-                const x = -20 + i * 3.4;
-                ctx.beginPath();
-                ctx.moveTo(x, -10); ctx.lineTo(x - 3, -14);
-                ctx.moveTo(x, 10); ctx.lineTo(x - 3, 14);
-                ctx.stroke();
-            }
-            antOval(ctx, 16, 0, 10, 8, '#a1815c', 0, 1.4, 0.55);
-            ctx.fillStyle = '#8f7150';
-            ctx.beginPath();
-            ctx.moveTo(22, -4.5); ctx.lineTo(38, -2); ctx.lineTo(39, 2); ctx.lineTo(22, 4.5);
+            ctx.moveTo(-12, -13);
+            ctx.lineTo(2, -13);
+            ctx.lineTo(-6, 13);
+            ctx.lineTo(-20, 13);
             ctx.closePath();
             ctx.fill();
-            ctx.fillStyle = '#3b2a1b';
-            ctx.beginPath(); ctx.arc(39, 0, 1.8, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#7d6144';
-            ctx.beginPath(); ctx.ellipse(12, -7, 4, 2.6, -0.5, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#1b120b';
-            ctx.beginPath(); ctx.arc(19, -2.5, 1.5, 0, Math.PI * 2); ctx.fill();
-        } else if (this.type === 'tiger') {
-            const sw = Math.sin(this.walkCycle * 1.7) * 4.5;
+            ctx.restore();
+            ctx.strokeStyle = 'rgba(235,215,185,0.3)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 10; i++) {
+                const x = -22 + i * 3.6;
+                ctx.beginPath();
+                ctx.moveTo(x, -10);
+                ctx.lineTo(x - 3, -15);
+                ctx.moveTo(x, 10);
+                ctx.lineTo(x - 3, 15);
+                ctx.stroke();
+            }
+            antOval(ctx, 16, 0, 10, 8, '#a1815c', 0, 1.45, 0.5);
+            mobEllipse(ctx, 12, -7, 4, 2.8, '#7d6144', -0.5);
+            mobEye(ctx, 19, -2.6, 1.5, '#1b120b');
+            ctx.fillStyle = '#8f7150';
+            ctx.beginPath();
+            ctx.moveTo(22, -4.5);
+            ctx.lineTo(39, -1.8);
+            ctx.lineTo(40, 1.8);
+            ctx.lineTo(22, 4.5);
+            ctx.closePath();
+            ctx.fill();
+            mobEllipse(ctx, 39, 0, 1.8, 1.8, '#3b2a1b');
+            mobStroke(ctx, [[24, -3], [34, -1.6]], 'rgba(60,40,25,0.5)', 0.8);
+            mobStroke(ctx, [[24, 3], [34, 1.6]], 'rgba(60,40,25,0.5)', 0.8);
+        } else if (this.type === 'rhino') {
+            const sw = Math.sin(this.walkCycle * 1.4) * 3;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
             for (const s of [-1, 1]) {
                 for (let i = 0; i < 3; i++) {
-                    const bx = -8 + i * 8;
-                    ctx.strokeStyle = '#241a10';
-                    ctx.lineWidth = 2.1;
-                    ctx.beginPath();
-                    ctx.moveTo(bx, s * 5);
-                    ctx.lineTo(bx - 4 + sw * s, s * 12);
-                    ctx.lineTo(bx - 7 + sw * s, s * 18);
-                    ctx.stroke();
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(bx - 7 + sw * s, s * 18);
-                    ctx.lineTo(bx - 9 + sw * s, s * 20);
-                    ctx.stroke();
+                    const bx = -6 + i * 7;
+                    mobStroke(ctx, [[bx, s * 5], [bx - 5 + sw * s, s * 13], [bx - 9 + sw * s, s * 17]], '#241a10', 2.8);
+                    mobStroke(ctx, [[bx - 9 + sw * s, s * 17], [bx - 12 + sw * s, s * 19]], '#241a10', 1.6);
                 }
             }
-            /* Élitros metálicos con manchas claras. */
-            antOval(ctx, -6, 0, 17, 9.5, '#7c4a12', 0, 1.6, 0.5);
+            antOval(ctx, -5, 0, 17, 11, '#3f2a1c', 0, 1.6, 0.45);
             ctx.save();
             ctx.beginPath();
-            ctx.ellipse(-7, 0, 15, 8, 0, 0, Math.PI * 2);
+            ctx.ellipse(-6, 0, 15.5, 9.5, 0, 0, Math.PI * 2);
             ctx.clip();
-            antOval(ctx, -7, -4.2, 15, 4.4, '#a86b1c', 0, 1.6, 0.62);
-            antOval(ctx, -7, 4.2, 15, 4.4, '#96601a', 0, 1.6, 0.6);
-            ctx.clip();
-            ctx.fillStyle = '#f2e7c4';
-            ctx.beginPath();
-            ctx.ellipse(-14, 0, 2.4, 7.6, 0.25, 0, Math.PI * 2);
-            ctx.ellipse(-6, 0, 2.2, 6.8, -0.2, 0, Math.PI * 2);
-            ctx.ellipse(1, 0, 1.8, 5.8, 0.15, 0, Math.PI * 2);
-            ctx.fill();
+            antOval(ctx, -6, -4, 14, 4, '#5b3d28', 0, 1.6, 0.6);
+            antOval(ctx, -6, 4, 14, 4, '#4d3322', 0, 1.6, 0.6);
+            ctx.strokeStyle = 'rgba(20,12,7,0.5)';
+            ctx.lineWidth = 0.9;
+            for (let i = 0; i < 5; i++) {
+                const x = -18 + i * 6;
+                ctx.beginPath();
+                ctx.moveTo(x, -9);
+                ctx.quadraticCurveTo(x + 2, 0, x, 9);
+                ctx.stroke();
+            }
             ctx.restore();
-            ctx.strokeStyle = '#3d2b18';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(-21, 0); ctx.lineTo(8, 0);
-            ctx.stroke();
-            antOval(ctx, 11, 0, 7, 6.2, '#3d2b18', 0, 1.5, 0.5);
-            ctx.fillStyle = '#f4f1de';
-            ctx.beginPath();
-            ctx.moveTo(15, -4.4); ctx.lineTo(27, -8.6); ctx.lineTo(24, -1.6);
-            ctx.moveTo(15, 4.4); ctx.lineTo(27, 8.6); ctx.lineTo(24, 1.6);
-            ctx.fill();
-            ctx.fillStyle = '#ffefb0';
-            ctx.beginPath();
-            ctx.arc(16, -2.6, 1.8, 0, Math.PI * 2);
-            ctx.arc(16, 2.6, 1.8, 0, Math.PI * 2);
-            ctx.fill();
+            mobStroke(ctx, [[-21, 0], [9, 0]], '#1b120b', 1);
+            antOval(ctx, 11, 0, 7, 6.5, '#241a10', 0, 1.5, 0.45);
+            mobEye(ctx, 14, -2.6, 1.3, '#e09f3e');
+            mobEye(ctx, 14, 2.6, 1.3, '#e09f3e');
             ctx.fillStyle = '#1b120b';
             ctx.beginPath();
-            ctx.arc(16.7, -2.6, 0.9, 0, Math.PI * 2);
-            ctx.arc(16.7, 2.6, 0.9, 0, Math.PI * 2);
+            ctx.moveTo(14, -4);
+            ctx.quadraticCurveTo(30, -12, 25, -1);
+            ctx.quadraticCurveTo(28, 9, 14, 4);
+            ctx.closePath();
             ctx.fill();
-            ctx.strokeStyle = '#3d2b18';
-            ctx.lineWidth = 1.3;
+            ctx.fillStyle = '#f4f1de';
             ctx.beginPath();
-            ctx.moveTo(8, -6); ctx.lineTo(16, -13);
-            ctx.moveTo(8, 6); ctx.lineTo(16, 13);
+            ctx.moveTo(20, -4);
+            ctx.lineTo(34, -9);
+            ctx.lineTo(25, 0);
+            ctx.lineTo(34, 8);
+            ctx.lineTo(20, 4);
+            ctx.closePath();
+            ctx.fill();
+            mobStroke(ctx, [[26, -3], [31, -5]], 'rgba(255,255,255,0.5)', 0.8);
+        } else if (this.type === 'hornet') {
+            const flap = Math.sin(this.walkCycle * 4) * 0.7;
+            ctx.lineCap = 'round';
+            for (const s of [-1, 1]) {
+                mobWing(ctx, -2, s * 13, 16, 5, s * flap, 'rgba(233,245,221,0.5)', 'rgba(120,150,120,0.55)');
+                for (let i = 0; i < 3; i++) {
+                    const bx = -4 + i * 6;
+                    mobStroke(ctx, [[bx, s * 4], [bx - 2, s * 9], [bx - 6, s * 14]], '#2a1408', 1.2);
+                }
+            }
+            antOval(ctx, -7, 0, 11, 7, '#e09f3e', 0, 1.6, 0.45);
+            ctx.fillStyle = '#1b120b';
+            ctx.beginPath();
+            for (const y of [-4, 0, 4]) ctx.ellipse(-8, y, 8.5, 1.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            antOval(ctx, 7, 0, 6, 5.5, '#2a1408', 0, 1.5, 0.45);
+            mobEllipse(ctx, 6, -4.6, 3.4, 2.4, '#e09f3e', -0.4);
+            mobEye(ctx, 9, -2.4, 1.5, '#ffd166');
+            mobEye(ctx, 9, 2.4, 1.5, '#ffd166');
+            mobStroke(ctx, [[11, -2], [18, -5], [21, -2]], '#2a1408', 1.4);
+            mobStroke(ctx, [[11, 2], [18, 5], [21, 2]], '#2a1408', 1.4);
+            mobStroke(ctx, [[-17, 0], [-24, 0]], '#1b120b', 1.5);
+        } else if (this.type === 'lizard') {
+            const sw = Math.sin(this.walkCycle * 1.8) * 5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = '#3f6128';
+            ctx.lineWidth = 7;
+            ctx.beginPath();
+            ctx.moveTo(-18, 0);
+            ctx.quadraticCurveTo(-34, -3, -46, 4);
             ctx.stroke();
+            ctx.strokeStyle = '#79a84a';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(-18, -2);
+            ctx.quadraticCurveTo(-34, -5, -45, 2);
+            ctx.stroke();
+            for (const s of [-1, 1]) {
+                for (let i = 0; i < 2; i++) {
+                    const bx = -8 + i * 12;
+                    mobStroke(ctx, [[bx, s * 6], [bx - 6 + sw * s, s * 15], [bx - 10 + sw * s, s * 20]], '#2d4a22', 3.2);
+                    for (let t = -1; t <= 1; t++) mobStroke(ctx, [[bx - 10 + sw * s, s * 20], [bx - 13 + sw * s + t * 2, s * 23]], '#2d4a22', 1.2);
+                }
+            }
+            antOval(ctx, -6, 0, 18, 8, '#4f7a32', 0, 1.55, 0.45);
+            antOval(ctx, -6, -3, 15, 3, '#79a84a', 0, 1.6, 0.6);
+            ctx.fillStyle = '#e9c46a';
+            for (let i = 0; i < 8; i++) {
+                ctx.beginPath();
+                ctx.arc(-18 + i * 5, Math.sin(i * 2.1) * 3.2, 1.4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.strokeStyle = 'rgba(30,60,20,0.5)';
+            ctx.lineWidth = 0.8;
+            for (let i = 0; i < 7; i++) {
+                const x = -16 + i * 5;
+                ctx.beginPath();
+                ctx.moveTo(x, -7);
+                ctx.quadraticCurveTo(x + 2, 0, x, 7);
+                ctx.stroke();
+            }
+            mobEllipse(ctx, 14, 0, 8.5, 5.5, '#6b8f3a', 0, 1.5, 0.45);
+            mobEllipse(ctx, 11, -3.2, 3.4, 2.2, '#e9c46a', -0.4);
+            mobEye(ctx, 17, -2.5, 1.9, '#ffd166');
+            mobEye(ctx, 17, 2.5, 1.9, '#ffd166');
+            mobStroke(ctx, [[20, -2], [25, -1]], '#2d4a22', 0.9);
+            mobStroke(ctx, [[20, 2], [25, 1]], '#2d4a22', 0.9);
         } else {
             const swing = Math.sin(this.walkCycle) * 3.5;
             ctx.strokeStyle = '#0f0f0f';
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            /* Ocho patas con codo y tarso. */
             for (const s of [-1, 1]) {
                 for (let i = 0; i < 4; i++) {
                     const ax = -6 + i * 4;
@@ -4825,35 +5191,15 @@ class Enemy extends Entity {
                     ctx.lineTo(kx + swing * s, s * 12);
                     ctx.lineTo(fx + swing * s, s * 20);
                     ctx.stroke();
-                    ctx.lineWidth = 1.2;
-                    ctx.beginPath();
-                    ctx.moveTo(fx + swing * s, s * 20);
-                    ctx.lineTo(fx + swing * s - 2, s * 23);
-                    ctx.stroke();
                 }
             }
-            /* Cefalotórax, pedicelo y abdomen con marcas. */
             antOval(ctx, -7, 0, 11.5, 9, '#161616', 0, 1.6, 0.5);
             antOval(ctx, 5, 0, 7, 6, '#202020', 0, 1.5, 0.5);
             antOval(ctx, -8, 0, 5.5, 4.5, '#d90429', 0, 1.5, 0.6);
-            ctx.fillStyle = 'rgba(255,255,255,0.35)';
-            ctx.beginPath();
-            ctx.ellipse(-8, -1.6, 2.6, 1.2, -0.3, 0, Math.PI * 2);
-            ctx.fill();
-            /* Ojos y quelíceros con colmillos. */
-            ctx.fillStyle = '#ff0054';
-            ctx.beginPath();
-            ctx.arc(8, -2.6, 1.3, 0, Math.PI * 2);
-            ctx.arc(8, 2.6, 1.3, 0, Math.PI * 2);
-            ctx.fillRect(10, -3.5, 2.2, 2.2);
-            ctx.fillRect(10, 1.3, 2.2, 2.2);
-            ctx.fill();
-            ctx.strokeStyle = '#0f0f0f';
-            ctx.lineWidth = 1.8;
-            ctx.beginPath();
-            ctx.moveTo(11, -2); ctx.lineTo(15, -4);
-            ctx.moveTo(11, 2); ctx.lineTo(15, 4);
-            ctx.stroke();
+            mobEye(ctx, 8, -2.6, 1.3, '#ff0054');
+            mobEye(ctx, 8, 2.6, 1.3, '#ff0054');
+            mobStroke(ctx, [[11, -2], [15, -4]], '#0f0f0f', 1.8);
+            mobStroke(ctx, [[11, 2], [15, 4]], '#0f0f0f', 1.8);
         }
 
         ctx.restore();
@@ -4885,8 +5231,9 @@ function layEgg(nest) {
             if (eggs.length >= eggCap) setStatus(`Sin espacio en cámaras de reina: ${eggCap} huevos. Construye otra cámara`, true);
             return false;
         }
-        if (PROG.caste === 'major' && ugLivingMajors() + ugMajorEggs() >= ugMajorCap()) {
-            setStatus(`Sin espacio en salas de majors: ${ugMajorCap()} majors. Construye otra sala`, true);
+        if ((PROG.caste === 'major' || PROG.caste === 'soldier') &&
+            ugLivingMajors() + ugLivingSoldiers() + ugMajorEggs() + ugSoldierEggs() >= ugMajorCap()) {
+            setStatus(`Sin espacio en salas de defensa: ${ugMajorCap()} unidades. Construye otra sala de majors`, true);
             return false;
         }
         storedFood -= EGG_COST;
@@ -4934,9 +5281,9 @@ function checkAutoSpawn() {
 
 function triggerNatureHarvest() {
     const sources = [...bushes, ...trees];
-    for (let i = 0; i < Math.min(12, sources.length); i++) {
+    for (let i = 0; i < Math.min(Math.max(4, Math.round(12 * seasonFoodMul())), sources.length); i++) {
         const src = sources[Math.floor(Math.random() * sources.length)];
-        spawnFoodCluster(src.x, src.y, 8, 'berry');
+        spawnFoodCluster(src.x, src.y, Math.max(3, Math.round(8 * seasonFoodMul())), 'berry');
     }
     setStatus('¡Los árboles y arbustos del bosque han producido nuevo alimento!');
     spawnHitParticles(camera.x, camera.y, '#b5e48c', 20);
@@ -10050,7 +10397,7 @@ function refreshNormalTools() {
     } else if (antNests.length === 0) {
         bq.disabled = true;
         bn.disabled = false;
-        bn.textContent = S().nestStyle === 'fungus' ? 'Plantar Hongo (0/1)' : 'Colocar Colonia (0/1)';
+        bn.textContent = 'Colocar Colonia (0/1)';
         setTool('normal_nest');
     } else {
         bq.disabled = true;
@@ -10464,9 +10811,9 @@ function refreshAbilityUI() {
         return;
     }
     if (isAtta) {
-        const nest = pvpMode ? (colony ? colony.nest : null) : antNests[0];
-        const hunger = nest && nest.hunger != null ? Math.round(nest.hunger) : 100;
-        abilityNoteEl.textContent = `Hongo simbiótico: +35% daño y +30% vida · ${nest ? `alimento del hongo ${hunger}%` : 'funda el hongo'}`;
+        const rooms = ugCount('fungus');
+        const bonus = fungusBonusPct();
+        abilityNoteEl.textContent = `Cámaras fúngicas: ${rooms} · +${bonus}% vida/daño · hongo ${Math.round(fungusHunger)}% · 1ª gratis, otras 500 comida`;
         return;
     }
     if (isCremato) {
@@ -10661,8 +11008,8 @@ function pickWaveEnemyType(w) {
     if (w <= 2) pool.push('spider', 'centipede', 'centipede');
     else if (w === 3) pool.push('spider', 'mantis', 'centipede', 'antlion', 'assassin');
     else if (w === 4) pool.push('mantis', 'antlion', 'scorpion', 'wasp', 'spider', 'assassin', 'tiger');
-    else if (w === 5) pool.push('mantis', 'scorpion', 'antlion', 'wasp', 'centipede', 'assassin', 'tiger');
-    else pool.push('mantis', 'scorpion', 'antlion', 'wasp', 'wasp', 'centipede', 'spider', 'antlion', 'assassin', 'tiger', 'tiger');
+    else if (w === 5) pool.push('mantis', 'scorpion', 'antlion', 'wasp', 'centipede', 'assassin', 'tiger', 'rhino', 'hornet');
+    else pool.push('mantis', 'scorpion', 'antlion', 'wasp', 'wasp', 'centipede', 'spider', 'antlion', 'assassin', 'tiger', 'tiger', 'rhino', 'hornet', 'lizard');
     return pool[Math.floor(Math.random() * pool.length)];
 }
 
@@ -10890,111 +11237,6 @@ function startTermiteCathedra(beacon, diff) {
     spawnHitParticles(beacon.x, beacon.y, '#dda15e', 26);
 }
 
-let developerFunctionsEnabled = false;
-function toggleDeveloperFunctions() {
-    if (developerFunctionsEnabled) {
-        developerFunctionsEnabled = false;
-        document.getElementById('developer-functions-panel').style.display = 'none';
-        document.getElementById('btn-developer-functions').textContent = 'Developer Functions';
-        return;
-    }
-    const code = window.prompt('Introduce el pass code para activar Developer Functions:');
-    if (code !== 'poyonator4000') {
-        if (code !== null) window.alert('Pass code incorrecto.');
-        return;
-    }
-    developerFunctionsEnabled = true;
-    document.getElementById('developer-functions-panel').style.display = 'flex';
-    document.getElementById('btn-developer-functions').textContent = 'Developer Functions ✓';
-}
-
-let adminPanelUnlocked = false;
-const LOCAL_BANS_KEY = 'aec_local_admin_bans_v1';
-function readLocalBans() {
-    try { const value = JSON.parse(localStorage.getItem(LOCAL_BANS_KEY) || '[]'); return Array.isArray(value) ? value : []; }
-    catch (_) { return []; }
-}
-function saveLocalBans(bans) { localStorage.setItem(LOCAL_BANS_KEY, JSON.stringify(bans)); }
-function formatBanExpiry(ban) {
-    if (!ban.expiresAt) return 'Permanente';
-    const remaining = ban.expiresAt - Date.now();
-    if (remaining <= 0) return 'Expirado';
-    const hours = Math.ceil(remaining / 3600000);
-    if (hours < 24) return 'Quedan ' + hours + ' h';
-    return 'Quedan ' + Math.ceil(hours / 24) + ' días';
-}
-function renderAdminBanList() {
-    const now = Date.now();
-    const bans = readLocalBans();
-    const active = bans.filter(b => !b.expiresAt || b.expiresAt > now);
-    saveLocalBans(active);
-    const host = document.getElementById('admin-ban-list');
-    if (!active.length) { host.textContent = 'No hay baneos activos guardados en este navegador.'; return; }
-    host.innerHTML = active.map((b, i) => `<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:5px 0;border-bottom:1px solid #68463b;"><span><b>${escapeHtml(b.username)}</b> — ${escapeHtml(formatBanExpiry(b))}${b.reason ? ' — ' + escapeHtml(b.reason) : ''}</span><button class="tool-btn" data-unban-index="${i}" style="padding:4px 8px;">Desbanear</button></div>`).join('');
-    host.querySelectorAll('[data-unban-index]').forEach(button => button.addEventListener('click', () => {
-        const current = readLocalBans(); const activeNow = current.filter(b => !b.expiresAt || b.expiresAt > Date.now());
-        activeNow.splice(Number(button.dataset.unbanIndex), 1); saveLocalBans(activeNow); renderAdminBanList();
-    }));
-}
-function unlockAdminPanel() {
-    if (adminPanelUnlocked) { adminPanelUnlocked = false; document.getElementById('admin-panel').style.display = 'none'; document.getElementById('btn-admin-panel').textContent = 'Admin Panel'; return; }
-    const code = window.prompt('Contraseña del Admin Panel:');
-    if (code !== 'poyonator4000') { if (code !== null) window.alert('Contraseña incorrecta.'); return; }
-    adminPanelUnlocked = true; document.getElementById('admin-panel').style.display = 'flex';
-    document.getElementById('btn-admin-panel').textContent = 'Admin Panel ✓'; renderAdminBanList();
-}
-function applyLocalBan() {
-    if (!adminPanelUnlocked) return;
-    const username = document.getElementById('admin-ban-user').value.trim();
-    if (!username) { alert('Escribe el nombre del jugador.'); return; }
-    const amount = Math.max(0, Number(document.getElementById('admin-ban-duration').value) || 0);
-    const unit = document.getElementById('admin-ban-unit').value;
-    const multipliers = { minutes: 60000, hours: 3600000, days: 86400000, weeks: 604800000 };
-    const expiresAt = unit === 'permanent' || amount === 0 ? 0 : Date.now() + amount * (multipliers[unit] || 86400000);
-    const reason = document.getElementById('admin-ban-reason').value.trim();
-    const bans = readLocalBans().filter(b => b.username.toLowerCase() !== username.toLowerCase());
-    bans.push({ username, reason, createdAt: Date.now(), expiresAt }); saveLocalBans(bans);
-    document.getElementById('admin-ban-user').value = ''; renderAdminBanList();
-    alert('Baneo guardado en la lista local para ' + username + '.');
-}
-
-function skipNormalWaves() {
-    if (!developerFunctionsEnabled) return;
-    if (gameMode !== 'normal' || !normal || !normal.founded || endState || paused) return;
-    if (normal.phase !== 'prepare') {
-        setStatus('Solo puedes saltar oleadas durante la preparación, después de defender la colonia.', true);
-        return;
-    }
-    const input = document.getElementById('normal-skip-wave');
-    const target = Math.max(normal.wave + 1, Math.min(9999, Math.floor(Number(input && input.value) || 0)));
-    if (!Number.isFinite(target) || target <= normal.wave) {
-        setStatus('Escribe una oleada futura válida.', true);
-        return;
-    }
-    const skipped = target - normal.wave - 1;
-    if (skipped <= 0) {
-        setStatus('La siguiente oleada ya es la ' + target + '.', true);
-        return;
-    }
-    // Las oleadas omitidas cuentan como progreso alcanzado y quedan registradas en el ranking.
-    normal.bestWave = Math.max(normal.bestWave || 0, target - 1);
-    normal.wave = target - 1;
-    submitWaveScore(normal.wave, 'normal');
-    normal.timer = 0.1;
-    setStatus(`Saltaste ${skipped} oleada(s). Preparando la oleada ${target}...`, true);
-    saveGame();
-    updateUI();
-}
-
-function finishNormalRunEarly() {
-    if (!developerFunctionsEnabled) return;
-    if (gameMode !== 'normal' || !normal || !normal.founded || endState) return;
-    const survived = Math.max(0, normal.wave - (normal.phase === 'wave' ? 1 : 0));
-    if (!window.confirm(`¿Terminar esta partida y guardar ${survived} oleadas en tu récord?`)) return;
-    // endGame envía el récord al ranking y muestra el resumen de la partida.
-    endGame('defeat', 'Has terminado la partida manualmente. Tu progreso queda registrado.');
-}
-
 function finishWave() {
     for (let i = termiteNests.length - 1; i >= 0; i--) {
         if (termiteNests[i].isWaveNest && termiteNests[i].wave === normal.wave) termiteNests.splice(i, 1);
@@ -11041,7 +11283,6 @@ function finishWave() {
         addFood(15, 'berry');
         setStatus(`Oleada ${cleared} repelida · +15 · Próxima en ${Math.ceil(normal.timer)}s${vetMsg}`, vetCount > 0);
     }
-    saveGame();
     updateUI();
 }
 
@@ -11113,6 +11354,68 @@ function updateNormalStep() {
     }
 }
 
+let developerFunctionsEnabled = false;
+
+function toggleDeveloperFunctions() {
+    const panel = document.getElementById('developer-functions-panel');
+    const button = document.getElementById('btn-developer-functions');
+    if (developerFunctionsEnabled) {
+        developerFunctionsEnabled = false;
+        if (panel) panel.style.display = 'none';
+        if (button) button.textContent = 'Developer Functions';
+        return;
+    }
+    const code = window.prompt('Introduce el pass code para activar Developer Functions:');
+    if (code !== 'poyonator4000') {
+        if (code !== null) window.alert('Pass code incorrecto.');
+        return;
+    }
+    developerFunctionsEnabled = true;
+    if (panel) panel.style.display = 'flex';
+    if (button) button.textContent = 'Developer Functions ✓';
+}
+
+function skipNormalWaves() {
+    if (!developerFunctionsEnabled) return;
+    if (gameMode !== 'normal' || !normal || !normal.founded || endState || paused) {
+        setStatus('Inicia una partida del Modo Normal y funda tu colonia primero.', true);
+        return;
+    }
+    if (normal.phase !== 'prepare') {
+        setStatus('Solo puedes saltar oleadas durante la preparación, después de defender la colonia.', true);
+        return;
+    }
+    const input = document.getElementById('normal-skip-wave');
+    const target = Math.max(normal.wave + 1, Math.min(9999, Math.floor(Number(input && input.value) || 0)));
+    if (!Number.isFinite(target) || target <= normal.wave) {
+        setStatus('Escribe una oleada futura válida.', true);
+        return;
+    }
+    const skipped = target - normal.wave - 1;
+    if (skipped <= 0) {
+        setStatus('La siguiente oleada ya es la ' + target + '.', true);
+        return;
+    }
+    normal.bestWave = Math.max(normal.bestWave || 0, target - 1);
+    normal.wave = target - 1;
+    submitWaveScore(normal.wave, 'normal');
+    normal.timer = 0.1;
+    setStatus(`Saltaste ${skipped} oleada(s). Preparando la oleada ${target}...`, true);
+    saveGame();
+    updateUI();
+}
+
+function finishNormalRunEarly() {
+    if (!developerFunctionsEnabled) return;
+    if (gameMode !== 'normal' || !normal || !normal.founded || endState) {
+        setStatus('No hay una partida de Historia activa para terminar.', true);
+        return;
+    }
+    const survived = Math.max(0, normal.wave - (normal.phase === 'wave' ? 1 : 0));
+    if (!window.confirm(`¿Terminar esta partida y guardar ${survived} oleadas en tu récord?`)) return;
+    endGame('defeat', 'Has terminado la partida manualmente. Tu progreso queda registrado.');
+}
+
 function checkEndConditions() {
     if (pvp) {
         if (pvp.over || pvp.phase !== 'battle') return;
@@ -11152,15 +11455,6 @@ function endGame(kind, reason) {
     paused = true;
     abilityCancelCharge();
     camera.follow = false;
-    if (gameMode === 'normal' && reason && reason.includes('manualmente')) {
-        try { localStorage.setItem('aec_normal_last_progress', JSON.stringify({
-            wave: Math.max(0, normal ? normal.wave - (normal.phase === 'wave' ? 1 : 0) : 0),
-            bestWave: normal && normal.bestWave || 0,
-            gameTime: Math.floor(gameTime),
-            species: speciesKey,
-            savedAt: Date.now()
-        })); } catch (e) {}
-    }
     try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
 
     document.getElementById('end-title').textContent = kind === 'victory' ? '¡Victoria!' : 'Derrota';
@@ -11180,7 +11474,6 @@ function endGame(kind, reason) {
     updateUI();
     const autoRestart = document.getElementById('dev-auto-restart');
     if (gameMode === 'normal' && developerFunctionsEnabled && autoRestart && autoRestart.checked) {
-        // endGame ya envió el récord mediante submitWaveScore; reiniciar tras mostrar el resultado.
         window.setTimeout(() => {
             if (endState && gameMode === 'normal') {
                 endScreen.classList.remove('show');
@@ -11327,6 +11620,222 @@ function drawCausticPools() {
     }
 }
 
+/* ============================================================
+   v4: investigación, estaciones, misiones, guardias y exportación
+   ============================================================ */
+function applyResearchToAnt(a) {
+    if (!a.researchBase) a.researchBase = { dmg: a.damage, hp: a.maxHp };
+    const mand = PROG.research.mandible || 0;
+    const ven = PROG.research.venom || 0;
+    const buff = a.buffMul || { dmg: 1 };
+    a.damage = a.researchBase.dmg * (1 + 0.06 * mand) * buff.dmg;
+    const newMax = Math.round(a.researchBase.hp * (1 + 0.05 * ven));
+    a.hp = Math.min(newMax, a.maxHp > 0 ? a.hp + Math.max(0, newMax - a.maxHp) : newMax);
+    a.maxHp = newMax;
+}
+
+function researchDigMul() { return 1 + 0.15 * (PROG.research.digging || 0); }
+function researchCost(level) { return 2 * (level + 1); }
+
+function buyResearch(key) {
+    const r = RESEARCH[key];
+    if (!r) return;
+    const lvl = PROG.research[key] || 0;
+    if (lvl >= r.max) { setStatus('Esa investigación ya está al máximo', true); return; }
+    const cost = researchCost(lvl);
+    const available = (PROG.cards.worker || 0) + (PROG.cards.major || 0) + (PROG.cards.soldier || 0);
+    if (available < cost) { setStatus(`Te faltan ${cost - available} cartas para investigar ${r.name}`, true); return; }
+    let need = cost;
+    for (const k of ['worker', 'major', 'soldier']) {
+        const take = Math.min(PROG.cards[k] || 0, need);
+        PROG.cards[k] -= take;
+        need -= take;
+        if (!need) break;
+    }
+    PROG.research[key] = lvl + 1;
+    for (const a of ants) applyResearchToAnt(a);
+    setStatus(`Investigación ${r.name} nivel ${lvl + 1}: ${r.desc}`);
+    renderCards();
+    updateUI();
+    saveGame();
+}
+
+function renderResearch() {
+    const grid = document.getElementById('research-grid');
+    if (!grid) return;
+    const totalCards = (PROG.cards.worker || 0) + (PROG.cards.major || 0) + (PROG.cards.soldier || 0);
+    grid.innerHTML = '';
+    for (const key of Object.keys(RESEARCH)) {
+        const r = RESEARCH[key];
+        const lvl = PROG.research[key] || 0;
+        const maxed = lvl >= r.max;
+        const cost = researchCost(lvl);
+        const node = document.createElement('div');
+        node.className = 'research-node';
+        node.innerHTML = `<b>${r.name} · ${lvl}/${r.max}</b><small>${r.desc}</small>`;
+        const btn = document.createElement('button');
+        btn.textContent = maxed ? 'Completado' : `Investigar (${cost} cartas)`;
+        btn.disabled = maxed || totalCards < cost;
+        btn.addEventListener('click', () => buyResearch(key));
+        node.appendChild(btn);
+        grid.appendChild(node);
+    }
+}
+
+function seasonFoodMul() {
+    const s = SEASONS[seasonState.index] || SEASONS[0];
+    const e = WEATHER_EVENTS[seasonState.event] || WEATHER_EVENTS.none;
+    return s.food * e.food;
+}
+
+function updateSeason() {
+    seasonState.timer -= STEP;
+    if (seasonState.timer <= 0) {
+        seasonState.timer += 120;
+        seasonState.index = (seasonState.index + 1) % SEASONS.length;
+        setStatus(`Nueva estación: ${SEASONS[seasonState.index].name}`);
+        renderSeason();
+    }
+    seasonState.eventTimer -= STEP;
+    if (seasonState.eventTimer <= 0) {
+        seasonState.eventTimer = 70;
+        const keys = Object.keys(WEATHER_EVENTS).filter(k => k !== 'none');
+        if (Math.random() < 0.38) {
+            seasonState.event = keys[Math.floor(Math.random() * keys.length)];
+            setStatus(`Evento climático: ${WEATHER_EVENTS[seasonState.event].name}`, true);
+        } else if (seasonState.event !== 'none') {
+            seasonState.event = 'none';
+            setStatus('El tiempo se despeja');
+        }
+    }
+}
+
+function renderSeason() {
+    const el = document.getElementById('season-badge');
+    if (!el) return;
+    const s = SEASONS[seasonState.index] || SEASONS[0];
+    const e = WEATHER_EVENTS[seasonState.event] || WEATHER_EVENTS.none;
+    el.textContent = e.name ? `${s.name} · ${e.name}` : s.name;
+    el.style.color = e.name ? e.color : s.color;
+}
+
+function updateMissions() {
+    for (const m of MISSIONS) {
+        if (PROG.missions[m.id]) continue;
+        if (m.progress() < m.target) continue;
+        PROG.missions[m.id] = true;
+        if (m.id === 'kills' || m.id === 'fungus') PROG.chests += 1;
+        else if (m.id === 'food') PROG.cards.worker += 2;
+        else if (m.id === 'ants') PROG.cards.major += 2;
+        else if (m.id === 'honey') PROG.cards.species += 3;
+        else if (m.id === 'wave') PROG.cards.soldier += 2;
+        setStatus(`¡Misión completada: ${m.name}! Recompensa: ${m.reward}`);
+        renderCards();
+    }
+}
+
+function renderMissions() {
+    const el = document.getElementById('missions-list');
+    if (!el) return;
+    el.innerHTML = '';
+    for (const m of MISSIONS) {
+        const done = !!PROG.missions[m.id];
+        const val = Math.min(m.target, m.progress());
+        const row = document.createElement('div');
+        row.className = 'mission-row' + (done ? ' done' : '');
+        row.innerHTML = `<strong>${done ? '✓ ' : ''}${m.name}</strong> — ${m.desc}<br>${val}/${m.target} · ${m.reward}<div class="mbar"><i style="width:${Math.round(100 * val / m.target)}%"></i></div>`;
+        el.appendChild(row);
+    }
+}
+
+function updateGuardAndPerks() {
+    perkTimer += STEP;
+    perkTick++;
+    if (perkTimer < 2) return;
+    const dt = perkTimer;
+    perkTimer = 0;
+    const mySide = pvp ? pvp.side : null;
+    const mine = ants.filter(a => a.hp > 0 && (!mySide || !a.nest || a.nest.owner === mySide));
+    const hostile = () => [...enemies, ...termites, ...beetles].filter(e => e && e.hp > 0);
+
+    for (const a of mine) {
+        const sp = SP(a.species || speciesKey);
+        if (a.caste === 'soldier' && a.nest) {
+            for (const e of hostile()) {
+                if (Math.hypot(e.x - a.nest.x, (e.y - a.nest.y) / TILT) <= 170) {
+                    e.hp -= a.damage * 1.2 * dt;
+                    if (Math.random() < 0.08) spawnHitParticles(e.x, e.y, '#ffd166', 1);
+                }
+            }
+        }
+        if (sp.swarm) {
+            for (const e of hostile()) {
+                if (Math.hypot(e.x - a.x, (e.y - a.y) / TILT) <= 110) {
+                    e.poisonT = Math.max(e.poisonT || 0, 120);
+                    e.poisonRate = 2.2;
+                }
+            }
+        }
+    }
+
+    leafTimer += dt;
+    raidTimer += dt;
+    if (leafTimer >= 8) {
+        leafTimer = 0;
+        for (const a of mine) {
+            if (SP(a.species || speciesKey).leafNest && a.nest) {
+                foods.push({ x: a.nest.x + (Math.random() - 0.5) * 40, y: a.nest.y + 20, amount: 1, age: 0, type: 'berry' });
+            }
+        }
+    }
+    if (raidTimer >= 30) {
+        raidTimer = 0;
+        const poly = mine.find(a => SP(a.species || speciesKey).slaveRaid && a.nest);
+        if (poly && termites.length) {
+            const t = termites.shift();
+            ants.push(new Ant(t.x, t.y, poly.nest, 'worker'));
+            spawnHitParticles(t.x, t.y, '#ffd166', 10);
+            setStatus('Polyergus capturó una termita y la adoptó como obrera');
+            updateUI();
+        }
+    }
+}
+
+function exportSave() {
+    saveGame();
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) { setStatus('No hay partida guardada para exportar', true); return; }
+    const blob = new Blob([raw], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ants-colony-save.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setStatus('Partida exportada a ants-colony-save.json');
+}
+
+function importSave(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        try {
+            const d = JSON.parse(reader.result);
+            if (!d || !d.mode || !SPECIES[d.species]) throw new Error('formato');
+            localStorage.setItem(SAVE_KEY, JSON.stringify(d));
+            applySave(d);
+            setStatus('Partida importada correctamente');
+            renderCards();
+            updateUI();
+        } catch (e) {
+            setStatus('Ese archivo no es una partida válida de Ants Empires', true);
+        }
+    };
+    reader.readAsText(file);
+}
+
 function saveGame() {
     if (netRole !== 'offline') return;
     if (gameMode === 'infinite') {
@@ -11363,6 +11872,7 @@ function saveGame() {
                 nest: antNests.indexOf(a.nest), isRaider: !!a.isRaider,
                 tempLife: a.tempLife ?? null,
                 vetRounds: a.vetRounds || 0, maxHp: a.maxHp, damage: a.damage,
+                fungusPct: a.fungusPct || 0,
                 caste: a.caste || 'worker'
             })),
             termites: termites.map(t => ({
@@ -11376,10 +11886,15 @@ function saveGame() {
             foods: foods.map(f => ({ x: f.x, y: f.y, amount: f.amount, age: f.age || 0, type: f.type || 'berry' })),
             behavior: behaviorMode,
             prog: {
+                caste: PROG.caste,
                 cards: { ...PROG.cards }, levels: { ...PROG.levels },
                 speciesCard: PROG.speciesCard, speciesLevel: PROG.speciesLevel,
-                chests: PROG.chests, food: { ...PROG.food }, honeyBuff: PROG.honeyBuff, sugarBuff: PROG.sugarBuff
+                chests: PROG.chests, food: { ...PROG.food }, honeyBuff: PROG.honeyBuff, sugarBuff: PROG.sugarBuff,
+                research: { ...PROG.research }, stats: { ...PROG.stats }, missions: { ...PROG.missions }
             },
+            season: { ...seasonState },
+            fungusTimer,
+            fungusHunger,
             ug: UG.ready ? UG.grid.map(row => row.map(cell => [cell.t, cell.room || '', cell.v])) : null,
             ugTool: UG.tool,
             normal: normal ? { ...normal, founded: normal.founded } : null
@@ -11414,6 +11929,7 @@ function applySave(d) {
     endState = null;
 
     if (d.prog) {
+        if (d.prog.caste) setCaste(d.prog.caste);
         Object.assign(PROG.cards, d.prog.cards || {});
         Object.assign(PROG.levels, d.prog.levels || {});
         PROG.speciesCard = d.prog.speciesCard || null;
@@ -11438,7 +11954,13 @@ function applySave(d) {
             }
         }
         PROG.buffApplied = !!curBuff;
+        if (d.prog.research) Object.assign(PROG.research, d.prog.research);
+        if (d.prog.stats) Object.assign(PROG.stats, d.prog.stats);
+        if (d.prog.missions) Object.assign(PROG.missions, d.prog.missions);
     }
+    if (d.season) Object.assign(seasonState, d.season);
+    fungusTimer = d.fungusTimer || 0;
+    fungusHunger = d.fungusHunger ?? 100;
     if (d.ug && Array.isArray(d.ug)) {
         UG.grid = d.ug.map(row => row.map(v => ({ t: v[0], room: v[1] || null, v: v[2] || 0, progress: 0 })));
         UG.ready = true;
@@ -11503,8 +12025,31 @@ function applySave(d) {
         ant.isRaider = !!a.isRaider;
         ant.tempLife = a.tempLife ?? null;
         ant.vetRounds = a.vetRounds || 0;
+        ant.fungusPct = a.fungusPct;
         return ant;
     }).filter(Boolean);
+
+    /* El daño guardado ya incluye investigación y buff de aquel momento:
+       reconstruimos la base para no volver a aplicarlos al comprar mejoras. */
+    {
+        const mand = (d.prog && d.prog.research && d.prog.research.mandible) || 0;
+        const ven = (d.prog && d.prog.research && d.prog.research.venom) || 0;
+        const savedBuff = (d.prog && d.prog.honeyBuff > 0) ? HONEY_BUFF
+            : (d.prog && d.prog.sugarBuff > 0) ? SUGAR_BUFF : null;
+        const curBuff = activeBuff() || { dmg: 1, spd: 1 };
+        for (const ant of ants) {
+            const dmgBase = (savedBuff ? ant.damage / savedBuff.dmg : ant.damage) / (1 + 0.06 * mand);
+            ant.researchBase = { dmg: dmgBase, hp: Math.max(1, Math.round(ant.maxHp / (1 + 0.05 * ven))) };
+            /* Partidas antiguas: el bono anterior era 1.12^(cámaras-1). */
+            const savedPct = ant.fungusPct ?? (speciesKey === 'atta'
+                ? Math.pow(1.12, Math.max(0, ugCount('fungus') - 1)) * 100 - 100 : 0);
+            ant.fungusPct = Math.max(0, savedPct);
+            ant.damage = dmgBase * (1 + 0.06 * mand) * curBuff.dmg;
+            ant.buffMul = curBuff;
+            if (curBuff.dmg !== 1) ant.speed *= curBuff.spd;
+            applyFungusBonusToAnt(ant);
+        }
+    }
 
     termites = (d.termites || []).map(t => {
         const nest = t.nest >= 0 ? termiteNests[t.nest] : null;
@@ -11599,16 +12144,7 @@ function updateBuffIndicator() {
 
 function updateUI() {
     updateBuffIndicator();
-    const normalSkipBtn = document.getElementById('btn-normal-skip');
-    const normalFinishBtn = document.getElementById('btn-normal-finish');
-    const normalSkipInput = document.getElementById('normal-skip-wave');
-    const normalReady = gameMode === 'normal' && !!normal && normal.founded && !endState && !pvp;
-    if (normalSkipBtn) normalSkipBtn.disabled = !developerFunctionsEnabled || !normalReady || paused || normal.phase !== 'prepare';
-    if (normalFinishBtn) normalFinishBtn.disabled = !developerFunctionsEnabled || !normalReady;
-    if (normalSkipInput && normal) {
-        normalSkipInput.min = String(Math.max(1, normal.wave + 1));
-        if (!normalSkipInput.dataset.userEdited) normalSkipInput.value = String(Math.max(1, normal.wave + 2));
-    }
+    renderSeason();
     if (pvp) { updatePvpUI(); return; }
     if (dayClockEl) dayClockEl.textContent = dayClockText();
     foodEl.textContent = Math.floor(storedFood);
@@ -13065,7 +13601,9 @@ function handleLeftClick(wx, wy) {
             } else if (sp.nestStyle === 'cactus') {
                 setStatus('Colonia Crematogaster fundada entre espinas de cactus. ¡Primera oleada en 55s!');
             } else if (sp.nestStyle === 'classic') {
-                setStatus(`Colonia de ${sp.name} fundada bajo tierra. ¡Primera oleada en 55s!`);
+                setStatus(sp.key === 'atta'
+                    ? 'Colonia de Atta fundada. Entra bajo tierra y construye tu primera cámara fúngica gratis. ¡Primera oleada en 55s!'
+                    : `Colonia de ${sp.name} fundada bajo tierra. ¡Primera oleada en 55s!`);
             } else {
                 setStatus('Colonia Leptogenys oculta bajo la hojarasca. ¡Primera oleada en 55s!');
             }
@@ -13169,13 +13707,10 @@ function handleLeftClick(wx, wy) {
                 setStatus('Espacio bloqueado para fundar la Colonia', true);
                 return;
             }
-            if (sp.nestStyle === 'fungus') {
-                placeNest(wx, wy, 'ant', 6, { style: 'fungus', species: sp.key });
-                setStatus('Hongo de Atta cephalotes plantado — aliméntalo llevando hojas o comida');
-            } else {
-                placeNest(wx, wy, 'ant', 6, { style: sp.nestStyle, species: sp.key });
-                setStatus(`Colonia de ${sp.name} fundada`);
-            }
+            placeNest(wx, wy, 'ant', 6, { style: sp.nestStyle, species: sp.key });
+            setStatus(sp.key === 'atta'
+                ? 'Colonia de Atta fundada. Construye cámaras fúngicas bajo tierra (la primera es gratis)'
+                : `Colonia de ${sp.name} fundada`);
         }
         updateUI();
         return;
@@ -13201,6 +13736,9 @@ function handleLeftClick(wx, wy) {
     else if (currentTool === 'wasp') enemies.push(new Enemy(wx, wy, 'wasp'));
     else if (currentTool === 'assassin') enemies.push(new Enemy(wx, wy, 'assassin'));
     else if (currentTool === 'anteater') enemies.push(new Enemy(wx, wy, 'anteater'));
+    else if (currentTool === 'rhino') enemies.push(new Enemy(wx, wy, 'rhino'));
+    else if (currentTool === 'hornet') enemies.push(new Enemy(wx, wy, 'hornet'));
+    else if (currentTool === 'lizard') enemies.push(new Enemy(wx, wy, 'lizard'));
 
     updateUI();
 }
@@ -13366,12 +13904,17 @@ function step() {
         }
     }
 
-    // Hambre del hongo de Atta cephalotes
-    for (const n of antNests) {
-        if (n.style !== 'fungus' || n.hunger == null) continue;
-        n.hunger = Math.max(0, n.hunger - STEP * 2.2);
-        if (n.hunger < 45) n.hp -= (1.5 + (45 - n.hunger) * 0.05) * STEP;
-        else if (n.hunger > 80) n.hp = Math.min(n.maxHp, n.hp + 3 * STEP);
+    // Hambre del hongo: se alimenta con las entregas de las obreras Atta
+    if (isAttaColony() && ugCount('fungus') > 0) {
+        fungusHunger = Math.max(0, fungusHunger - STEP * 2.2);
+        if (fungusHunger < 45) {
+            const dmg = (1.5 + (45 - fungusHunger) * 0.05) * STEP;
+            for (const a of ants) if (SP(a.species || speciesKey).fungus) a.hp -= dmg;
+            if (queen && SP(queen.species || speciesKey).fungus) queen.hp -= dmg;
+            for (const n of antNests) if (n.species === 'atta') n.hp -= dmg;
+        } else if (fungusHunger > 80) {
+            for (const n of antNests) if (n.species === 'atta') n.hp = Math.min(n.maxHp, n.hp + 3 * STEP);
+        }
     }
 
     // La colonia del mundo infinito pone huevos con la comida almacenada
@@ -13520,6 +14063,7 @@ function step() {
         if (egg.timer <= 0) {
             eggs.splice(i, 1);
             ants.push(new Ant(egg.nest.x, egg.nest.y, egg.nest, egg.caste || 'worker'));
+            PROG.stats.ants = (PROG.stats.ants || 0) + 1;
             spawnHitParticles(egg.nest.x, egg.nest.y, '#b5e48c', 12);
             setStatus('¡Un huevo eclosionó! Nueva hormiga obrera');
             updateUI();
@@ -13611,6 +14155,7 @@ function step() {
 
     for (let i = enemies.length - 1; i >= 0; i--) {
         if (enemies[i].hp <= 0) {
+            PROG.stats.kills = (PROG.stats.kills || 0) + 1;
             const drop = enemies[i].drop || 15;
             spawnFoodCluster(enemies[i].x, enemies[i].y, Math.ceil(drop / 3), 'meat');
             if (Math.random() < HONEY_CHANCE * (enemies[i].isMiniBoss ? 6 : 1)) {
@@ -13631,6 +14176,9 @@ function step() {
         }
     }
 
+    updateSeason();
+    updateGuardAndPerks();
+    updateMissions();
     updateNormalStep();
     checkEndConditions();
 }
@@ -13761,7 +14309,7 @@ function loop(ts) {
 function buildSpeciesCards() {
     if (!speciesGrid) return;
     speciesGrid.innerHTML = '';
-    const order = ['camponotus', 'leptogenys', 'odontomachus', 'cephalotes', 'atta', 'allomerus', 'myrmecia', 'crematogaster', 'lasius', 'colobopsis'];
+    const order = ['camponotus', 'leptogenys', 'odontomachus', 'cephalotes', 'atta', 'allomerus', 'myrmecia', 'crematogaster', 'lasius', 'colobopsis', 'solenopsis', 'oecophylla', 'dorylus', 'polyergus', 'formica'];
 
     for (const key of order) {
         const sp = SPECIES[key];
@@ -13791,7 +14339,8 @@ function buildSpeciesCards() {
         badge.textContent = sp.family;
         const kind = document.createElement('span');
         kind.className = 'species-kind';
-        kind.textContent = sp.nestStyle === 'tree' ? 'ARBÓREA'
+        kind.textContent = sp.key === 'atta' ? 'HONGO'
+            : sp.nestStyle === 'tree' ? 'ARBÓREA'
             : sp.nestStyle === 'fungus' ? 'HONGO'
             : sp.nestStyle === 'cactus' ? 'CACTUS'
             : sp.nestStyle === 'volcano' ? 'VOLCÁN'
@@ -14718,15 +15267,6 @@ btnSpeed.addEventListener('click', () => {
 });
 btnBehavior.addEventListener('click', cycleBehaviorMode);
 updateBehaviorUI();
-document.getElementById('btn-developer-functions').addEventListener('click', toggleDeveloperFunctions);
-document.getElementById('btn-admin-panel').addEventListener('click', unlockAdminPanel);
-document.getElementById('btn-admin-ban').addEventListener('click', applyLocalBan);
-document.getElementById('btn-admin-refresh').addEventListener('click', renderAdminBanList);
-document.getElementById('btn-normal-skip').addEventListener('click', skipNormalWaves);
-document.getElementById('btn-normal-finish').addEventListener('click', finishNormalRunEarly);
-document.getElementById('normal-skip-wave').addEventListener('input', event => {
-    event.currentTarget.dataset.userEdited = '1';
-});
 document.getElementById('btn-end-restart').addEventListener('click', () => {
     endScreen.classList.remove('show');
     if (pvp) { showMainMenu(); return; }
@@ -14736,6 +15276,13 @@ document.getElementById('btn-end-menu').addEventListener('click', () => {
     endScreen.classList.remove('show');
     showMainMenu();
 });
+
+const devFunctionsButton = document.getElementById('btn-developer-functions');
+const devSkipButton = document.getElementById('btn-normal-skip');
+const devFinishButton = document.getElementById('btn-normal-finish');
+if (devFunctionsButton) devFunctionsButton.addEventListener('click', toggleDeveloperFunctions);
+if (devSkipButton) devSkipButton.addEventListener('click', skipNormalWaves);
+if (devFinishButton) devFinishButton.addEventListener('click', finishNormalRunEarly);
 
 window.addEventListener('resize', resizeCanvas);
 window.addEventListener('beforeunload', () => {
@@ -14783,6 +15330,15 @@ const btnLogoutEl = document.getElementById('btn-logout');
 const mobToastEl = document.getElementById('mob-toast');
 const btnPlayEl = document.getElementById('btn-play');
 const modesPanelEl = document.getElementById('modes-panel');
+const adminScreenEl = document.getElementById('admin-screen');
+const adminUserEl = document.getElementById('admin-user');
+const adminMinutesEl = document.getElementById('admin-minutes');
+const adminUnitEl = document.getElementById('admin-unit');
+const adminStatusEl = document.getElementById('admin-status');
+const adminListEl = document.getElementById('admin-list');
+const adminIdKindEl = document.getElementById('admin-id-kind');
+const adminIdValueEl = document.getElementById('admin-id-value');
+const btnRankingAdmin = document.getElementById('btn-ranking-admin');
 
 const auth = { token: null, user: null, bestWave: 0, rank: 0, offline: false, guest: false };
 let mobToastTimer = null;
@@ -14803,11 +15359,28 @@ function aecApiBase() {
     return aecServerUrl().replace(/^ws/, 'http').replace(/\/+$/, '');
 }
 
+function aecDeviceId() {
+    try {
+        let id = localStorage.getItem('aec_device');
+        if (!id || id.length < 16) {
+            id = (window.crypto && window.crypto.randomUUID)
+                ? window.crypto.randomUUID()
+                : String(Date.now()) + '-' + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+            localStorage.setItem('aec_device', id);
+        }
+        return id;
+    } catch (e) {
+        return 'fallback-' + String(Date.now()) + '-' + Math.random().toString(36).slice(2);
+    }
+}
+
 async function aecFetch(path, options, timeoutMs) {
     const ctl = new AbortController();
     const timer = setTimeout(() => ctl.abort(), timeoutMs || 30000);
     try {
-        const res = await fetch(aecApiBase() + path, Object.assign({ signal: ctl.signal }, options || {}));
+        const opts = Object.assign({}, options || {});
+        opts.headers = Object.assign({}, opts.headers || {}, { 'x-device-id': aecDeviceId() });
+        const res = await fetch(aecApiBase() + path, Object.assign({ signal: ctl.signal }, opts));
         const data = await res.json().catch(() => ({}));
         return { ok: res.ok, status: res.status, data };
     } catch (e) {
@@ -14823,6 +15396,163 @@ function aecPost(path, body) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     }, 50000);
+}
+
+/* ---- Panel de administración: bans por usuario ---- */
+function setAdminStatus(text, bad) {
+    if (!adminStatusEl) return;
+    adminStatusEl.textContent = text;
+    adminStatusEl.classList.toggle('bad', !!bad);
+}
+
+function adminRequest(path, body) {
+    if (!isAdminUser() || !auth.token) {
+        setAdminStatus('Solo la cuenta OHIO puede usar el panel de administración.', true);
+        return Promise.resolve({ ok: false, status: 0, data: { error: 'Sin permiso' } });
+    }
+    const headers = { 'Content-Type': 'application/json', 'x-admin-token': auth.token };
+    const payload = body ? Object.assign({}, body, { token: auth.token }) : null;
+    const options = payload
+        ? { method: 'POST', headers, body: JSON.stringify(payload) }
+        : { method: 'GET', headers };
+    return aecFetch(path, options, 20000);
+}
+
+function openAdminScreen() {
+    if (!isAdminUser()) {
+        setStatus('Solo la cuenta OHIO puede usar el panel de administración.');
+        return;
+    }
+    if (authScreenEl) authScreenEl.classList.remove('show');
+    if (rankingScreenEl) rankingScreenEl.classList.remove('show');
+    if (indexScreenEl) indexScreenEl.classList.remove('show');
+    if (startScreen) startScreen.classList.remove('show');
+    if (adminScreenEl) adminScreenEl.classList.add('show');
+    setAdminStatus('Sesión: ' + auth.user + '. Introduce el usuario y la duración del ban.');
+    if (adminUserEl) adminUserEl.focus();
+}
+
+function closeAdminScreen() {
+    if (adminScreenEl) adminScreenEl.classList.remove('show');
+    rankingScreenEl.classList.add('show');
+    refreshRanking();
+}
+
+function adminUntilText(until) {
+    const n = Number(until);
+    if (!(n > 0)) return '¿?';
+    const d = new Date(n);
+    return isNaN(d.getTime()) ? '¿?' : d.toLocaleString();
+}
+
+function renderAdminBans(bans, identities) {
+    if (!adminListEl) return;
+    adminListEl.innerHTML = '';
+    const users = bans || [];
+    const ids = identities || [];
+    if (!users.length && !ids.length) {
+        adminListEl.innerHTML = '<div>Sin baneos activos.</div>';
+        return;
+    }
+    for (const b of users) {
+        const div = document.createElement('div');
+        div.textContent = b.user + ' — hasta ' + adminUntilText(b.until);
+        adminListEl.appendChild(div);
+    }
+    if (ids.length) {
+        const head = document.createElement('div');
+        head.textContent = '— Identidades —';
+        adminListEl.appendChild(head);
+        for (const b of ids) {
+            const div = document.createElement('div');
+            div.textContent = (b.kind || '?') + ':' + (b.value || '?') + ' — hasta ' + adminUntilText(b.until);
+            adminListEl.appendChild(div);
+        }
+    }
+}
+
+async function adminBan() {
+    const user = adminUserEl ? adminUserEl.value.trim().toLowerCase() : '';
+    if (!/^[A-Za-z0-9_]{3,16}$/.test(user)) {
+        setAdminStatus('El usuario debe tener de 3 a 16 letras, números o guion bajo.', true);
+        return;
+    }
+    const amount = Math.max(1, Math.floor(Number(adminMinutesEl ? adminMinutesEl.value : 0) || 0));
+    const factor = Math.max(1, Math.floor(Number(adminUnitEl ? adminUnitEl.value : 1) || 1));
+    const minutes = Math.min(525600, amount * factor);
+    setAdminStatus('Baneando a ' + user + '...');
+    const r = await adminRequest('/api/admin/ban', { user, minutes });
+    if (!r.ok) {
+        setAdminStatus(r.data.error || 'No se pudo banear al usuario.', true);
+        return;
+    }
+    setAdminStatus('Usuario ' + user + ' baneado durante ' + minutes + ' minuto(s).');
+    adminRefresh();
+}
+
+async function adminUnban() {
+    const user = adminUserEl ? adminUserEl.value.trim().toLowerCase() : '';
+    if (!/^[A-Za-z0-9_]{3,16}$/.test(user)) {
+        setAdminStatus('Escribe un usuario válido.', true);
+        return;
+    }
+    setAdminStatus('Desbaneando a ' + user + '...');
+    const r = await adminRequest('/api/admin/unban', { user });
+    if (!r.ok) {
+        setAdminStatus(r.data.error || 'No se pudo desbanear al usuario.', true);
+        return;
+    }
+    setAdminStatus('Usuario ' + user + ' desbaneado.');
+    adminRefresh();
+}
+
+async function adminIdentityBan() {
+    const kind = adminIdKindEl ? adminIdKindEl.value : 'device';
+    const value = adminIdValueEl ? adminIdValueEl.value.trim() : '';
+    if (!value || value.length > 256) {
+        setAdminStatus('Escribe el valor de la identidad (máximo 256 caracteres).', true);
+        return;
+    }
+    const amount = Math.max(1, Math.floor(Number(adminMinutesEl ? adminMinutesEl.value : 0) || 0));
+    const factor = Math.max(1, Math.floor(Number(adminUnitEl ? adminUnitEl.value : 1) || 1));
+    const minutes = Math.min(525600, amount * factor);
+    setAdminStatus('Baneando ' + kind + '...');
+    const r = await adminRequest('/api/admin/ban-identity', { kind, value, minutes, reason: 'ban manual OHIO' });
+    if (!r.ok) {
+        setAdminStatus(r.data.error || 'No se pudo banear la identidad.', true);
+        return;
+    }
+    setAdminStatus('Identidad ' + kind + ' baneada durante ' + minutes + ' minuto(s).');
+    if (adminIdValueEl) adminIdValueEl.value = '';
+    adminRefresh();
+}
+
+async function adminIdentityUnban() {
+    const kind = adminIdKindEl ? adminIdKindEl.value : 'device';
+    const value = adminIdValueEl ? adminIdValueEl.value.trim() : '';
+    if (!value || value.length > 256) {
+        setAdminStatus('Escribe el valor exacto de la identidad a liberar.', true);
+        return;
+    }
+    setAdminStatus('Quitando ban de ' + kind + '...');
+    const r = await adminRequest('/api/admin/unban-identity', { kind, value });
+    if (!r.ok) {
+        setAdminStatus(r.data.error || 'No se pudo quitar el ban de identidad.', true);
+        return;
+    }
+    setAdminStatus('Ban de ' + kind + ' eliminado.');
+    adminRefresh();
+}
+
+async function adminRefresh() {
+    setAdminStatus('Cargando baneos...');
+    const r = await adminRequest('/api/admin/bans');
+    if (!r.ok) {
+        setAdminStatus(r.data.error || 'No se pudo cargar la lista de baneos.', true);
+        return;
+    }
+    renderAdminBans(r.data.bans || [], r.data.identities || []);
+    setAdminStatus('Baneos actualizados.');
 }
 
 function setAuthMsg(text, bad) {
@@ -14852,7 +15582,17 @@ function clearSession() {
     try { localStorage.removeItem(AEC_SESSION_KEY); } catch (e) {}
 }
 
+function isAdminUser() {
+    return !!auth.user && !auth.guest && String(auth.user).toLowerCase() === 'ohio';
+}
+
+function updateAdminButton() {
+    if (!btnRankingAdmin) return;
+    btnRankingAdmin.style.display = isAdminUser() ? 'inline-block' : 'none';
+}
+
 function updateProfileChip() {
+    updateAdminButton();
     if (!profileChipEl) return;
     if (!auth.user) {
         profileChipEl.classList.remove('show');
@@ -15025,6 +15765,14 @@ async function initAuth() {
         setStatus('Bienvenido de nuevo, ' + auth.user);
         return;
     }
+    if (r.status === 403) {
+        auth.token = null;
+        auth.user = null;
+        clearSession();
+        setAuthPanel('login');
+        setAuthMsg(r.data.error || 'Este usuario está baneado.', true);
+        return;
+    }
     if (r.status === 401) {
         auth.token = null;
         auth.user = null;
@@ -15047,6 +15795,15 @@ async function submitWaveScore(wave, mode) {
     if (r.ok && r.data.profile) {
         applyProfile(r.data.profile);
         if (r.data.improved) setStatus('Nuevo récord personal: ' + auth.bestWave + ' oleadas (puesto #' + auth.rank + ')');
+        return;
+    }
+    if (r.status === 403) {
+        auth.token = null;
+        auth.user = null;
+        clearSession();
+        setStatus(r.data.error || 'Usuario baneado: no se guardaron puntajes');
+        showAuthScreen();
+        setAuthMsg(r.data.error || 'Usuario baneado', true);
     }
 }
 
@@ -15091,6 +15848,7 @@ async function refreshRanking() {
 
 function openRanking() {
     if (typeof showMainMenu === 'function') showMainMenu();
+    updateAdminButton();
     rankingScreenEl.classList.add('show');
     refreshRanking();
 }
@@ -15193,10 +15951,20 @@ if (document.getElementById('btn-cards')) document.getElementById('btn-cards').a
 if (document.getElementById('btn-cards-back')) document.getElementById('btn-cards-back').addEventListener('click', () => toggleCardsScreen(false));
 if (document.getElementById('btn-up-worker')) document.getElementById('btn-up-worker').addEventListener('click', () => upgradeCaste('worker'));
 if (document.getElementById('btn-up-major')) document.getElementById('btn-up-major').addEventListener('click', () => upgradeCaste('major'));
+if (document.getElementById('btn-up-soldier')) document.getElementById('btn-up-soldier').addEventListener('click', () => upgradeCaste('soldier'));
 if (document.getElementById('btn-open-chest')) document.getElementById('btn-open-chest').addEventListener('click', openChest);
 if (document.getElementById('btn-convert-sugar')) document.getElementById('btn-convert-sugar').addEventListener('click', convertHoneyToSugar);
 if (document.getElementById('btn-use-sugar')) document.getElementById('btn-use-sugar').addEventListener('click', useSugar);
 if (document.getElementById('btn-use-honey')) document.getElementById('btn-use-honey').addEventListener('click', useHoney);
+if (document.getElementById('btn-export-save')) document.getElementById('btn-export-save').addEventListener('click', exportSave);
+if (document.getElementById('btn-import-save')) document.getElementById('btn-import-save').addEventListener('click', () => {
+    const f = document.getElementById('import-save-file');
+    if (f) f.click();
+});
+if (document.getElementById('import-save-file')) document.getElementById('import-save-file').addEventListener('change', (e) => {
+    importSave(e.target.files && e.target.files[0]);
+    e.target.value = '';
+});
 if (document.getElementById('btn-end-chest')) document.getElementById('btn-end-chest').addEventListener('click', () => toggleCardsScreen(true));
 if (document.getElementById('btn-major-raid')) document.getElementById('btn-major-raid').addEventListener('click', orderMajorRaid);
 
@@ -15211,6 +15979,15 @@ if (authTabRegister) authTabRegister.addEventListener('click', () => setAuthPane
 if (btnAuthLogin) btnAuthLogin.addEventListener('click', doLogin);
 if (btnAuthRegister) btnAuthRegister.addEventListener('click', doRegister);
 if (btnAuthSkip) btnAuthSkip.addEventListener('click', playAsGuest);
+if (btnRankingAdmin) btnRankingAdmin.addEventListener('click', openAdminScreen);
+if (document.getElementById('btn-admin-back')) document.getElementById('btn-admin-back').addEventListener('click', closeAdminScreen);
+if (document.getElementById('btn-admin-ban')) document.getElementById('btn-admin-ban').addEventListener('click', adminBan);
+if (document.getElementById('btn-admin-unban')) document.getElementById('btn-admin-unban').addEventListener('click', adminUnban);
+if (document.getElementById('btn-admin-refresh')) document.getElementById('btn-admin-refresh').addEventListener('click', adminRefresh);
+if (adminUserEl) adminUserEl.addEventListener('keydown', e => { if (e.key === 'Enter') adminBan(); });
+if (document.getElementById('btn-admin-id-ban')) document.getElementById('btn-admin-id-ban').addEventListener('click', adminIdentityBan);
+if (document.getElementById('btn-admin-id-unban')) document.getElementById('btn-admin-id-unban').addEventListener('click', adminIdentityUnban);
+if (adminIdValueEl) adminIdValueEl.addEventListener('keydown', e => { if (e.key === 'Enter') adminIdentityBan(); });
 if (btnLogoutEl) btnLogoutEl.addEventListener('click', e => { e.stopPropagation(); doLogout(); });
 if (profileChipEl) profileChipEl.addEventListener('click', () => {
     if (!auth.user) return;
@@ -15247,8 +16024,11 @@ const UG = {
 
 const PROG = {
     caste: 'worker',
-    cards: { worker: 0, major: 0, species: 0 },
-    levels: { worker: 1, major: 1 },
+    cards: { worker: 0, major: 0, soldier: 0, species: 0 },
+    levels: { worker: 1, major: 1, soldier: 1 },
+    research: { mandible: 0, venom: 0, digging: 0, honey: 0 },
+    stats: { kills: 0, food: 0, ants: 0, honeyUsed: 0 },
+    missions: {},
     speciesCard: null,
     speciesLevel: 0,
     chests: 0,
@@ -15260,6 +16040,73 @@ const PROG = {
 
 let majorRaidAssigned = [];
 
+const RESEARCH = {
+    mandible: { name: 'Mandíbulas de aleación', desc: '+6% daño por nivel (máx. 3)', max: 3 },
+    venom: { name: 'Veneno glandular', desc: '+5% vida por nivel (máx. 3)', max: 3 },
+    digging: { name: 'Patas excavadoras', desc: '+15% velocidad de obra por nivel (máx. 3)', max: 3 },
+    honey: { name: 'Metabolismo de miel', desc: '+10% duración de la miel por nivel (máx. 3)', max: 3 }
+};
+
+const MISSIONS = [
+    { id: 'kills', name: 'Cazadora', desc: 'Mata 10 enemigos', target: 10, reward: '1 cofre', progress: () => PROG.stats.kills || 0 },
+    { id: 'food', name: 'Almacenista', desc: 'Recolecta 60 de comida', target: 60, reward: '2 cartas de obrera', progress: () => PROG.stats.food || 0 },
+    { id: 'ants', name: 'Guardería', desc: 'Eclosiona 12 huevos', target: 12, reward: '2 cartas de major', progress: () => PROG.stats.ants || 0 },
+    { id: 'fungus', name: 'Micóloga', desc: 'Construye 1 cámara fúngica (Atta)', target: 1, reward: '1 cofre', progress: () => (typeof ugCount === 'function' ? ugCount('fungus') : 0) },
+    { id: 'honey', name: 'Dulce energía', desc: 'Usa 1 miel manualmente', target: 1, reward: '3 cartas de especie', progress: () => PROG.stats.honeyUsed || 0 },
+    { id: 'wave', name: 'Superviviente', desc: 'Llega a la oleada 3', target: 3, reward: '2 cartas de soldado', progress: () => (normal && normal.wave) || 0 }
+];
+
+const SEASONS = [
+    { name: 'Primavera', food: 1.15, color: '#b5e48c' },
+    { name: 'Verano', food: 1.0, color: '#ffd166' },
+    { name: 'Otoño', food: 0.8, color: '#e09f3e' },
+    { name: 'Invierno', food: 0.55, color: '#a8dadc' }
+];
+const WEATHER_EVENTS = {
+    none: { name: '', food: 1, color: '#b7e4c7' },
+    drought: { name: 'Sequía', food: 0.6, color: '#e09f3e' },
+    rain: { name: 'Lluvia', food: 1.4, color: '#90e0ef' },
+    cold: { name: 'Frío intenso', food: 0.7, color: '#caf0f8' }
+};
+let seasonState = { index: 0, event: 'none', timer: 120, eventTimer: 70 };
+let fungusTimer = 0;
+let fungusHunger = 100;
+
+function isAttaColony() {
+    return speciesKey === 'atta' || antNests.some(n => n.species === 'atta');
+}
+function fungusBonusPct() {
+    const rooms = ugCount('fungus');
+    if (rooms <= 0) return 0;
+    return 35 + (rooms - 1) * 12;
+}
+
+function applyFungusBonusToAnt(a) {
+    if (!a || !SP(a.species || speciesKey).fungus) return;
+    const target = fungusBonusPct();
+    const applied = a.fungusPct || 0;
+    if (target === applied) return;
+    const mul = (100 + target) / (100 + applied);
+    const oldMax = a.maxHp;
+    a.maxHp = Math.round(a.maxHp * mul);
+    a.hp = Math.min(a.maxHp, a.hp + Math.max(0, a.maxHp - oldMax));
+    a.damage *= mul;
+    if (a.researchBase) {
+        a.researchBase.dmg *= mul;
+        a.researchBase.hp = Math.max(1, Math.round(a.researchBase.hp * mul));
+    }
+    a.fungusPct = target;
+}
+
+function syncFungusBonuses() {
+    for (const a of ants) applyFungusBonusToAnt(a);
+}
+let perkTimer = 0;
+let convertTimer = 0;
+let leafTimer = 0;
+let raidTimer = 0;
+let perkTick = 0;
+
 function ugReset() {
     UG.on = false; UG.ready = false; UG.grid = []; UG.jobs = [];
     UG.camX = UG_COLS * UG_CELL_W / 2;
@@ -15269,6 +16116,14 @@ function ugReset() {
     PROG.sugarBuff = 0;
     PROG.buffApplied = false;
     PROG.food = { berry: 0, meat: 0, honey: 0, sugar: 0 };
+    fungusTimer = 0;
+    fungusHunger = 100;
+    perkTimer = 0;
+    convertTimer = 0;
+    leafTimer = 0;
+    raidTimer = 0;
+    perkTick = 0;
+    seasonState = { index: 0, event: 'none', timer: 120, eventTimer: 70 };
 }
 
 function ugEnsure() {
@@ -15305,6 +16160,8 @@ function ugEggCap() { return Math.max(1, ugCount('queen') * 5); }
 function ugMajorCap() { return ugCount('major') * 5; }
 function ugMajorEggs() { return eggs.filter(e => e.caste === 'major').length; }
 function ugLivingMajors() { return ants.filter(a => a.caste === 'major').length; }
+function ugSoldierEggs() { return eggs.filter(e => e.caste === 'soldier').length; }
+function ugLivingSoldiers() { return ants.filter(a => a.caste === 'soldier').length; }
 function ugOpenNeighbor(c, r) {
     for (const [dc, dr] of [[1,0],[-1,0],[0,1],[0,-1]]) {
         const cell = ugCell(c + dc, r + dr);
@@ -15314,7 +16171,7 @@ function ugOpenNeighbor(c, r) {
 }
 function ugFreeWorker() { return ants.find(a => a.caste === 'worker' && !a.defending && !a.ugJob && a.hp > 0) || null; }
 
-const UG_COST = { queen_chamber: 45, food_chamber: 30, major_chamber: 40 };
+const UG_COST = { queen_chamber: 45, food_chamber: 30, major_chamber: 40, fungus_chamber: 500 };
 
 function setUGTool(tool) {
     UG.tool = tool;
@@ -15364,7 +16221,13 @@ function handleUGClick(c, r) {
     } else {
         if (existing) { setStatus('Ya hay una obra en esa celda', true); return; }
         if (cell.t !== 'tunnel') { setStatus('Las cámaras se construyen sobre túneles excavados', true); return; }
-        const cost = UG_COST[UG.tool] || 30;
+        if (UG.tool === 'fungus_chamber' && !isAttaColony()) {
+            setStatus('Las cámaras fúngicas son exclusivas de Atta cephalotes', true);
+            return;
+        }
+        const cost = UG.tool === 'fungus_chamber'
+            ? (ugCount('fungus') === 0 ? 0 : 500)
+            : (UG_COST[UG.tool] || 30);
         if (storedFood < cost) { setStatus(`Faltan ${cost - Math.floor(storedFood)} de comida para la cámara`, true); return; }
         if (!ugFreeWorker()) { setStatus('Necesitas una obrera libre para construir', true); return; }
         UG.jobs.push({ c, r, type: 'build', room: UG.tool.replace('_chamber', ''), progress: 0, ant: null, cost });
@@ -15376,6 +16239,18 @@ function handleUGClick(c, r) {
 function ugStep() {
     if (!UG.ready || !paused) {
         if (!UG.ready) return;
+    }
+    if (isAttaColony() && ugCount('fungus') > 0) {
+        fungusTimer += STEP;
+        if (fungusTimer >= 12) {
+            fungusTimer -= 12;
+            if (fungusHunger > 20) {
+                const made = addFood(2 * ugCount('fungus'), 'berry');
+                if (made > 0) setStatus(`Las cámaras fúngicas produjeron ${Math.floor(made)} de comida`);
+            } else {
+                setStatus('El hongo está hambriento y no produce comida', true);
+            }
+        }
     }
     const buffBefore = activeBuff();
     if (PROG.honeyBuff > 0) PROG.honeyBuff = Math.max(0, PROG.honeyBuff - STEP);
@@ -15404,7 +16279,7 @@ function ugStep() {
             if (!w) continue;
             j.ant = w; w.ugJob = j;
         }
-        j.progress += STEP * (PROG.honeyBuff > 0 ? 1.5 : PROG.sugarBuff > 0 ? 1.125 : 1);
+        j.progress += STEP * (PROG.honeyBuff > 0 ? 1.5 : PROG.sugarBuff > 0 ? 1.125 : 1) * researchDigMul();
         if (j.progress < 4.5) continue;
         const cell = ugCell(j.c, j.r);
         if (cell) {
@@ -15415,8 +16290,10 @@ function ugStep() {
                 cell.t = j.room; cell.room = j.room;
                 storedFood = Math.max(0, storedFood - (j.cost || 0));
                 spawnHitParticles(camera.x, camera.y, '#ffd166', 10);
+                if (j.room === 'fungus') { syncFungusBonuses(); updateUI(); }
                 setStatus(j.room === 'food' ? '¡Cámara de comida lista! Aumenta el almacén +80'
-                    : j.room === 'major' ? '¡Sala de majors lista! Capacidad +5 majors'
+                    : j.room === 'major' ? '¡Sala de majors lista! Capacidad +5 majors/soldados'
+                    : j.room === 'fungus' ? '¡Cámara fúngica lista! Produce comida y da +35% la primera y +12% cada extra a las Atta'
                     : '¡Cámara de reina lista! Capacidad +5 huevos');
             }
         }
@@ -15433,6 +16310,7 @@ function addFood(amount, type = 'berry') {
     const gained = Math.max(0, Math.min(raw, cap - storedFood));
     storedFood += gained;
     PROG.food[type] = (PROG.food[type] || 0) + gained / ft.value;
+    PROG.stats.food = (PROG.stats.food || 0) + gained;
     if (type === 'sugar' && gained > 0) applySugarBuff();
     if (storedFood >= cap - 0.001 && raw > gained + 0.01) {
         setStatus('Almacén lleno: construye cámaras de comida bajo tierra', true);
@@ -15464,7 +16342,7 @@ function syncAntBuffs() {
 }
 
 function applyHoneyBuff() {
-    PROG.honeyBuff = HONEY_BUFF.time;
+    PROG.honeyBuff = Math.round(HONEY_BUFF.time * (1 + 0.1 * (PROG.research.honey || 0)));
     syncAntBuffs();
     setStatus('¡MIEL! +25% daño y +15% velocidad para todas las hormigas durante 5 minutos');
 }
@@ -15510,6 +16388,7 @@ function useHoney() {
         return;
     }
     PROG.food.honey -= 1;
+    PROG.stats.honeyUsed = (PROG.stats.honeyUsed || 0) + 1;
     applyHoneyBuff();
     renderCards();
     updateUI();
@@ -15522,18 +16401,25 @@ function applyLevelStats(ant, caste) {
     ant.maxHp = Math.round(ant.maxHp * mul);
     ant.hp = ant.maxHp;
     ant.damage *= mul;
+    if (ant.researchBase) {
+        ant.researchBase.dmg *= mul;
+        ant.researchBase.hp = Math.round(ant.researchBase.hp * mul);
+    }
     if (caste === 'major') ant.scale *= 1.32;
+    if (caste === 'soldier') ant.scale *= 1.18;
 }
 
 function setCaste(caste) {
-    PROG.caste = caste === 'major' ? 'major' : 'worker';
-    const w = document.getElementById('caste-worker');
-    const m = document.getElementById('caste-major');
-    if (w) w.classList.toggle('active', PROG.caste === 'worker');
-    if (m) m.classList.toggle('active', PROG.caste === 'major');
+    PROG.caste = caste === 'major' ? 'major' : caste === 'soldier' ? 'soldier' : 'worker';
+    for (const k of ['worker', 'major', 'soldier']) {
+        const b = document.getElementById('caste-' + k);
+        if (b) b.classList.toggle('active', PROG.caste === k);
+    }
     setStatus(PROG.caste === 'major'
         ? 'Casta major seleccionada: necesitas salas de majors (5 por sala) y más vida/daño'
-        : 'Casta obrera seleccionada: recogen comida, excavan y construyen');
+        : PROG.caste === 'soldier'
+            ? 'Casta soldado seleccionada: guardias de nido con mucha vida y daño, comparten capacidad con los majors'
+            : 'Casta obrera seleccionada: recogen comida, excavan y construyen');
 }
 
 function cardNeed(level) { return level * 2; }
@@ -15574,7 +16460,7 @@ function upgradeCaste(caste) {
     PROG.cards[caste] -= need;
     PROG.levels[caste]++;
     for (const a of ants) if (a.caste === caste) applyLevelStats(a, caste);
-    setStatus(`${caste === 'major' ? 'Majors' : 'Obreras'} nivel ${PROG.levels[caste]} · +7.5% vida y daño`);
+    setStatus(`${caste === 'major' ? 'Majors' : caste === 'soldier' ? 'Soldados' : 'Obreras'} nivel ${PROG.levels[caste]} · +7.5% vida y daño`);
     renderCards();
 }
 
@@ -15590,8 +16476,10 @@ function openChest() {
             got.push('especie: ' + SP(key).name);
         } else if (roll < 0.52) {
             addCard('worker'); got.push('obrera');
-        } else {
+        } else if (roll < 0.68) {
             addCard('major'); got.push('major');
+        } else {
+            addCard('soldier'); got.push('soldado');
         }
     }
     setStatus('Cofre abierto: ' + got.join(', '));
@@ -15603,18 +16491,23 @@ function renderCards() {
     const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
     set('card-worker-count', PROG.cards.worker);
     set('card-major-count', PROG.cards.major);
+    set('card-soldier-count', PROG.cards.soldier);
     set('card-species-count', PROG.cards.species);
     set('worker-level', PROG.levels.worker);
     set('major-level', PROG.levels.major);
+    set('soldier-level', PROG.levels.soldier);
     set('worker-need', cardNeed(PROG.levels.worker));
     set('major-need', cardNeed(PROG.levels.major));
+    set('soldier-need', cardNeed(PROG.levels.soldier));
     set('species-card-info', PROG.speciesCard
         ? `${SP(PROG.speciesCard).name} · nivel ${PROG.speciesLevel} · -${cardCostReduction()}s cooldown`
         : 'Sin especie activa · cartas muy raras');
     const bw = document.getElementById('btn-up-worker');
     const bm = document.getElementById('btn-up-major');
+    const bs = document.getElementById('btn-up-soldier');
     if (bw) bw.disabled = PROG.cards.worker < cardNeed(PROG.levels.worker);
     if (bm) bm.disabled = PROG.cards.major < cardNeed(PROG.levels.major);
+    if (bs) bs.disabled = PROG.cards.soldier < cardNeed(PROG.levels.soldier);
     const banner = document.getElementById('chest-banner');
     if (banner) {
         banner.style.display = PROG.chests > 0 ? 'block' : 'none';
@@ -15636,9 +16529,12 @@ function renderCards() {
     };
     setBar('worker-progress', 100 * (PROG.cards.worker % cardNeed(PROG.levels.worker)) / cardNeed(PROG.levels.worker));
     setBar('major-progress', 100 * (PROG.cards.major % cardNeed(PROG.levels.major)) / cardNeed(PROG.levels.major));
+    setBar('soldier-progress', 100 * (PROG.cards.soldier % cardNeed(PROG.levels.soldier)) / cardNeed(PROG.levels.soldier));
     setBar('species-progress', Math.min(100, PROG.cards.species * 20));
     const st = document.getElementById('cards-status');
-    if (st) st.textContent = `Nivel obrera ${PROG.levels.worker} · nivel major ${PROG.levels.major} · miel ${Math.floor(PROG.food.honey || 0)} · azúcar ${Math.floor(PROG.food.sugar || 0)} · efecto miel ${Math.ceil(PROG.honeyBuff)}s / azúcar ${Math.ceil(PROG.sugarBuff)}s`;
+    if (st) st.textContent = `Nivel obrera ${PROG.levels.worker} · nivel major ${PROG.levels.major} · soldado ${PROG.levels.soldier} · miel ${Math.floor(PROG.food.honey || 0)} · azúcar ${Math.floor(PROG.food.sugar || 0)} · efecto miel ${Math.ceil(PROG.honeyBuff)}s / azúcar ${Math.ceil(PROG.sugarBuff)}s`;
+    renderResearch();
+    renderMissions();
 }
 
 function toggleCardsScreen(show) {
@@ -15674,14 +16570,24 @@ function updateUGUI() {
     set('ug-queen-rooms', ugCount('queen'));
     set('ug-food-rooms', ugCount('food'));
     set('ug-major-rooms', ugCount('major'));
-    set('ug-dug', ugCount('tunnel') + ugCount('queen') + ugCount('food') + ugCount('major'));
-    const labels = { dig: 'Excavar', queen_chamber: 'Cámara de reina', food_chamber: 'Cámara de comida', major_chamber: 'Sala de majors' };
+    set('ug-fungus-rooms', ugCount('fungus'));
+    const fs = document.getElementById('ug-fungus-status');
+    if (fs) fs.style.display = (isAttaColony() && ugCount('fungus') > 0) ? 'block' : 'none';
+    set('ug-fungus-hunger', Math.round(fungusHunger) + '%');
+    set('ug-fungus-bonus', '+' + fungusBonusPct() + '%');
+    const fb = document.getElementById('tool-fungus_chamber');
+    if (fb) {
+        fb.disabled = !isAttaColony();
+        fb.textContent = ugCount('fungus') === 0 ? 'Cámara fúngica (gratis)' : 'Cámara fúngica (500 comida)';
+    }
+    set('ug-dug', ugCount('tunnel') + ugCount('queen') + ugCount('food') + ugCount('major') + ugCount('fungus'));
+    const labels = { dig: 'Excavar', queen_chamber: 'Cámara de reina', food_chamber: 'Cámara de comida', major_chamber: 'Sala de majors', fungus_chamber: 'Cámara fúngica' };
     set('ug-tool-label', labels[UG.tool] || UG.tool);
     set('food-cap-label', ' / ' + ugFoodCap());
     set('food-cap-label2', ' / ' + ugFoodCap());
     set('egg-cap-label', eggs.length + '/' + ugEggCap());
     set('worker-count', ants.filter(a => a.caste === 'worker').length);
-    set('major-count', ugLivingMajors());
+    set('major-count', ugLivingMajors() + ugLivingSoldiers());
     set('major-cap', ugMajorCap());
 }
 
@@ -15737,7 +16643,7 @@ function renderUnderground() {
                     ugPx(x + 18, y + 12, 3, 3, '#d9b45c');
                 }
                 if (cell.t !== 'tunnel') {
-                    const col = cell.t === 'queen' ? '#ffd166' : cell.t === 'food' ? '#b7e4c7' : '#ff758f';
+                    const col = cell.t === 'queen' ? '#ffd166' : cell.t === 'food' ? '#b7e4c7' : cell.t === 'fungus' ? '#80ed99' : '#ff758f';
                     ugPx(x + 2, y + 2, UG_CELL_W - 4, 3, col);
                     ugPx(x + 2, y + UG_CELL_H - 5, UG_CELL_W - 4, 3, col);
                     ugPx(x + 2, y + 2, 3, UG_CELL_H - 4, col);
@@ -15771,6 +16677,14 @@ function renderUnderground() {
                 }
                 ctx.fillStyle = '#b7e4c7'; ctx.font = 'bold 15px monospace'; ctx.textAlign = 'center';
                 ctx.fillText('COMIDA ' + Math.floor(storedFood) + '/' + ugFoodCap(), x, y - 10);
+            } else if (cell.t === 'fungus') {
+                for (let i = 0; i < 6; i++) {
+                    const gx = x - 16 + i * 6;
+                    ugPx(gx, y + 8, 4, 5, '#d8f3dc');
+                    ugPx(gx, y + 4, 3, 4, '#80ed99');
+                }
+                ctx.fillStyle = '#80ed99'; ctx.font = 'bold 15px monospace'; ctx.textAlign = 'center';
+                ctx.fillText('FUNGO', x, y - 10);
             } else if (cell.t === 'major') {
                 const majors = ugLivingMajors();
                 for (let i = 0; i < Math.min(5, majors); i++) {
@@ -15778,7 +16692,7 @@ function renderUnderground() {
                     ugPx(x - 15 + i * 6, y + 2, 7, 5, '#8f1d14');
                 }
                 ctx.fillStyle = '#ff8fa3'; ctx.font = 'bold 15px monospace'; ctx.textAlign = 'center';
-                ctx.fillText('MAJORS ' + majors + '/' + ugMajorCap(), x, y - 10);
+                                     ctx.fillText('DEFENSA ' + majors + '/' + ugMajorCap(), x, y - 10);
             }
         }
     }
